@@ -29,11 +29,11 @@ Product Insights
 
 Objectives
 
-Monitor IT support ticket performance,
-Analyze ticket resolution speed and SLA performance,
-Understand customer behavior and demographics,
-Identify most common issues and product-related problems,
-Improve operational efficiency through data insights.
+Monitor IT support ticket performance |
+Analyze ticket resolution speed and SLA performance |
+Understand customer behavior and demographics |
+Identify most common issues and product-related problems |
+Improve operational efficiency through data insights
 
 Dataset Description
 
@@ -87,9 +87,9 @@ High priority ticket trends,
 
 Key Insights
 
-Email is the most used support channel,
-Certain products generate more support requests,
-The most tickets are requests for refund and technical issues.
+Email is the most used support channel |
+Certain products generate more support requests |
+The most tickets are requests for refund and technical issues |
 
 IT-Support-Analytics-Dashboard/
 │
@@ -110,5 +110,5 @@ Data Cleaning (Power Query),
 
 Autor:
 
-Metodi Metodiev
+Metodi Metodiev |
 BI & Data Engeneer
