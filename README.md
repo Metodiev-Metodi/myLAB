@@ -9,14 +9,14 @@ SQL Analysis
 
 The SQL scripts include the following queries:
 
-Top_5_prioroty_tickets.sql
-customer_age.sql
-customer_satisfaction.sql
-efficiency_score.sql
-email_chat_phone.sql
-satisfaction_vs_resolution_speed.sql
-ticket_type.sql
-time_resolution.sql
+Top_5_prioroty_tickets.sql |
+customer_age.sql |
+customer_satisfaction.sql |
+efficiency_score.sql |
+email_chat_phone.sql |
+satisfaction_vs_resolution_speed.sql |
+ticket_type.sql |
+time_resolution.sql |
 total_tickets.sql
 
 Dashboard Overview 
@@ -29,63 +29,66 @@ Product Insights
 
 Objectives
 
-Monitor IT support ticket performance
-Analyze ticket resolution speed and SLA performance
-Understand customer behavior and demographics
-Identify most common issues and product-related problems
-Improve operational efficiency through data insights
+Monitor IT support ticket performance,
+Analyze ticket resolution speed and SLA performance,
+Understand customer behavior and demographics,
+Identify most common issues and product-related problems,
+Improve operational efficiency through data insights.
 
 Dataset Description
 
 The dataset contains IT support ticket records with the following fields:
-Ticket ID
-Customer Name
-Customer Email
-Customer Age
-Customer Gender
-Product Purchased
-Date of Purchase
-Ticket Type
-Ticket Subject
-Ticket Description
-Ticket Status
-Resolution
-Ticket Priority
-Ticket Channel
-First Response Time
-Time to Resolution
-Customer Satisfaction Rating
+
+Ticket ID,
+Customer Name,
+Customer Email,
+Customer Age,
+Customer Gender,
+Product Purchased,
+Date of Purchase,
+Ticket Type,
+Ticket Subject,
+Ticket Description,
+Ticket Status,
+Resolution,
+Ticket Priority,
+Ticket Channel,
+First Response Time,
+Time to Resolution,
+Customer Satisfaction Rating.
 
 Key KPIs
-The dashboard includes the following key performance indicators:
-Total Tickets
-Resolved Tickets
-Open Tickets
-Average Resolution Time
-Average First Response Time
-Customer Satisfaction Rating
-Dashboard Pages
-Overview Dashboard
-KPI summary cards
-Ticket status distribution
-Ticket priority analysis
-Ticket trends over time
-Channel distribution
-Customer Insights
-Customer age distribution
-Gender analysis
-Customer activity overview
-High-frequency customers
-Product & Issue Analysis
-Top products causing tickets
-Most common issues
-Resolution time per product
-Channel efficiency comparison
-High priority ticket trends
 
-Key Insights 
-Email is the most used support channel
-Certain products generate more support requests
+The dashboard includes the following key performance indicators:
+Total Tickets,
+Resolved Tickets,
+Open Tickets,
+Average Resolution Time,
+Average First Response Time,
+Customer Satisfaction Rating,
+Dashboard Pages,
+Overview Dashboard,
+KPI summary cards,
+Ticket status distribution,
+Ticket priority analysis,
+Ticket trends over time,
+Channel distribution,
+Customer Insights,
+Customer age distribution,
+Gender analysis,
+Customer activity overview,
+High-frequency customers,
+Product & Issue Analysis,
+Top products causing tickets,
+Most common issues,
+Resolution time per product,
+Channel efficiency comparison,
+High priority ticket trends,
+
+Key Insights
+
+Email is the most used support channel,
+Certain products generate more support requests,
 The most tickets are requests for refund and technical issues.
 
 IT-Support-Analytics-Dashboard/
@@ -97,13 +100,15 @@ IT-Support-Analytics-Dashboard/
 └── README.md
 
 Tools Used
-VSCode
-SQlite
-Power BI Desktop
-Microsoft Excel (Data Source)
-DAX (Data Modeling & Calculations)
-Data Cleaning (Power Query)
 
-Autor
+VSCode,
+SQlite,
+Power BI Desktop,
+Microsoft Excel (Data Source),
+DAX (Data Modeling & Calculations),
+Data Cleaning (Power Query),
+
+Autor:
+
 Metodi Metodiev
 BI & Data Engeneer
