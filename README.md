@@ -19,9 +19,9 @@ time_resolution.sql
 total_tickets.sql
 
 Dashboard Overview 
-![Overview Dashboard](screenshots/dashboard.png)
+![Overview Dashboard](screenshots/Dashboard.png)
 Product Insights
-![Product Insights](screenshots/product-insights.png)
+![Product Insights](screenshots/Product_Insights.png)
 
 Objectives
 Monitor IT support ticket performance
