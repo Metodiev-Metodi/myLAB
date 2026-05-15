@@ -101,12 +101,12 @@ IT-Support-Analytics-Dashboard/
 
 Tools Used
 
-VSCode,
-SQlite,
-Power BI Desktop,
-Microsoft Excel (Data Source),
-DAX (Data Modeling & Calculations),
-Data Cleaning (Power Query),
+VSCode |
+SQlite |
+Power BI Desktop |
+Microsoft Excel (Data Source) |
+DAX (Data Modeling & Calculations) |
+Data Cleaning (Power Query)
 
 Autor:
 
