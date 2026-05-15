@@ -6,6 +6,7 @@ This project also contains an interactive IT Support Analytics Dashboard built i
 It analyzes support tickets to provide insights into customer issues, resolution performance, ticket trends, and operational efficiency.
 
 SQL Analysis
+
 The SQL scripts include the following queries:
 
 Top_5_prioroty_tickets.sql
@@ -19,11 +20,15 @@ time_resolution.sql
 total_tickets.sql
 
 Dashboard Overview 
+
 ![Overview Dashboard](screenshots/Dashboard.png)
+
 Product Insights
+
 ![Product Insights](screenshots/Product_Insights.png)
 
 Objectives
+
 Monitor IT support ticket performance
 Analyze ticket resolution speed and SLA performance
 Understand customer behavior and demographics
@@ -31,6 +36,7 @@ Identify most common issues and product-related problems
 Improve operational efficiency through data insights
 
 Dataset Description
+
 The dataset contains IT support ticket records with the following fields:
 Ticket ID
 Customer Name
