@@ -18,6 +18,11 @@ ticket_type.sql
 time_resolution.sql
 total_tickets.sql
 
+Dashboard Overview 
+![Overview Dashboard](screenshots/dashboard.png)
+Product Insights
+![Product Insights](screenshots/product-insights.png)
+
 Objectives
 Monitor IT support ticket performance
 Analyze ticket resolution speed and SLA performance
