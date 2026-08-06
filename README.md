@@ -85,11 +85,56 @@ Resolution time per product,
 Channel efficiency comparison,
 High priority ticket trends,
 
-Key Insights
+Key Business Insights
 
-Email is the most used support channel |
-Certain products generate more support requests |
-The most tickets are requests for refund and technical issues |
+1. Support Volume Distribution
+- The dataset contains **8,469 support tickets**, with **2,769 resolved tickets**.
+- Ticket distribution is relatively balanced across categories, with the highest volume coming from:
+  - Refund requests (1.75K tickets)
+  - Technical issues (1.75K tickets)
+  - Cancellation requests (1.70K tickets)
+- These categories represent the biggest opportunities for process optimization and automation.
+
+2. Main Support Drivers
+- The most common ticket subjects are:
+  - Refund requests (576)
+  - Software bugs (574)
+  - Product compatibility issues (567)
+  - Delivery problems (561)
+- These areas generate the highest operational workload and should be prioritized for improvement.
+
+3. Ticket Priority Analysis
+- Ticket priorities are evenly distributed:
+  - Medium: 2.19K
+  - Critical: 2.13K
+  - High: 2.08K
+  - Low: 2.06K
+- The high number of critical and high-priority tickets indicates the need for effective prioritization and faster resolution processes.
+
+4. Support Channel Analysis
+- Ticket volume is distributed across all channels:
+  - Email: 2,143 tickets
+  - Phone: 2,132 tickets
+  - Social Media: 2,121 tickets
+  - Chat: 2,073 tickets
+- No single channel dominates, suggesting an opportunity to optimize channel strategy based on resolution efficiency and customer experience.
+
+5. Product Support Insights
+- Products with the highest number of related tickets include:
+  - Canon EOS (240)
+  - GoPro Hero (228)
+  - Nest Thermostat (225)
+- These products require further investigation to identify recurring issues and potential product improvements.
+
+6. Resolution Time Analysis
+- Resolution time varies significantly between products.
+- Products such as Canon EOS, iPhone, and Canon DSLR Camera show the highest resolution times.
+- Further analysis can help identify root causes and reduce support effort.
+
+Recommendations
+- Automate repetitive requests such as refund and technical support cases.
+- Improve product documentation for frequently reported issues.
+- Prioritize investigation of products with high ticket volume and longer resolution times.
 
 IT-Support-Analytics-Dashboard/
 │
