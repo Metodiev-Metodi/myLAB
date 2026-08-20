@@ -1,13 +1,5 @@
 # IT & Data Analytics Portfolio
 
-Welcome to my IT and Data Analytics portfolio.
-
-This repository contains practical projects combining my background in **IT Operations, SQL, Data Analytics, BI, automation and AI-assisted solutions**.
-
-##  About Me
-
-# IT & Data Analytics Portfolio
-
 ## 👨‍💻 About Me
 
 IT and Data professional with **10+ years of experience in IT Operations** and **1.5+ years of hands-on experience in Data Analytics and BI**.
