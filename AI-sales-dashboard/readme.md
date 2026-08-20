@@ -70,6 +70,7 @@ Instead of manually preparing the data and building the dashboard, the workflow 
                     ┌─────────────────┐
                     │ Webhook Response│
                     │                 │
-                    │ Final Dashboard  │
+                    │ Final Dashboard │
                     └─────────────────┘
-
+```
+![w](screenshots/n8n_AI_architecture.png)
