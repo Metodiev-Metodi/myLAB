@@ -1,0 +1,207 @@
+CREATE TABLE analytics.dim_customer AS
+SELECT
+    customer_unique_id,
+    customer_city,
+    customer_state
+FROM raw.customers;
+
+CREATE TABLE analytics.dim_product AS
+
+SELECT
+
+    product_id,
+
+    COALESCE(
+        product_category_name,
+        'Unknown'
+    ) AS product_category_name,
+
+    product_weight_g,
+
+    product_length_cm,
+
+    product_height_cm,
+
+    product_width_cm
+
+FROM raw.products;
+
+CREATE TABLE analytics.dim_date AS
+SELECT DISTINCT
+    DATE(order_purchase_timestamp::timestamp) AS date,
+    EXTRACT(YEAR FROM order_purchase_timestamp::timestamp) AS year,
+    EXTRACT(MONTH FROM order_purchase_timestamp::timestamp) AS month,
+    EXTRACT(QUARTER FROM order_purchase_timestamp::timestamp) AS quarter
+FROM raw.orders;
+
+
+CREATE TABLE analytics.fact_sales AS
+SELECT
+    o.order_id,
+    DATE(o.order_purchase_timestamp) AS order_date,
+    o.customer_id,
+    oi.product_id,
+    oi.seller_id,
+    oi.price,
+    oi.freight_value,
+    p.payment_value,
+    c.customer_unique_id
+FROM raw.orders o
+JOIN raw.order_items oi
+ON o.order_id = oi.order_id
+LEFT JOIN raw.payments p
+ON o.order_id = p.order_id
+LEFT JOIN raw.customers c
+ON o.customer_id = c.customer_id;
+
+
+KPI tables: 
+
+CREATE TABLE analytics.kpi_sales AS
+
+SELECT
+
+ROUND(SUM(payment_value)::numeric,2) AS total_revenue,
+
+COUNT(DISTINCT order_id) AS total_orders,
+
+COUNT(DISTINCT customer_unique_id) AS total_customers,
+
+ROUND(AVG(payment_value)::numeric,2) AS avg_order_value
+
+FROM analytics.fact_sales;
+
+
+
+CREATE TABLE analytics.monthly_sales AS
+
+SELECT
+
+    DATE_TRUNC('month', order_date)::date AS month,
+
+    ROUND(SUM(payment_value)::numeric,2) AS revenue,
+
+    COUNT(DISTINCT order_id) AS total_orders,
+
+    COUNT(DISTINCT customer_unique_id) AS total_customers,
+
+    ROUND(AVG(payment_value)::numeric,2) AS avg_order_value
+
+
+FROM analytics.fact_sales
+
+
+GROUP BY 
+    DATE_TRUNC('month', order_date)::date
+
+
+ORDER BY month;
+
+
+
+ALTER TABLE analytics.monthly_sales
+ADD COLUMN revenue_growth_pct numeric;
+WITH growth AS (
+
+SELECT
+
+month,
+
+revenue,
+
+LAG(revenue) OVER(
+ORDER BY month
+) AS previous_month_revenue
+
+FROM analytics.monthly_sales
+
+)
+
+
+UPDATE analytics.monthly_sales m
+
+SET revenue_growth_pct =
+
+ROUND(
+(
+(m.revenue - g.previous_month_revenue)
+/
+g.previous_month_revenue
+* 100
+)::numeric,
+2
+)
+
+FROM growth g
+
+WHERE m.month = g.month;
+
+
+
+ALTER TABLE analytics.fact_sales
+ADD COLUMN profit numeric;
+UPDATE analytics.fact_sales
+SET profit = payment_value - (payment_value * 0.60);
+
+
+
+
+CREATE TABLE analytics.product_performance AS
+
+SELECT
+
+    f.product_id,
+
+    p.product_category_name,
+
+    COUNT(f.product_id) AS units_sold,
+
+    COUNT(DISTINCT f.order_id) AS total_orders,
+
+    ROUND(SUM(f.payment_value),2) AS revenue,
+
+    ROUND(SUM(f.profit),2) AS profit
+
+
+FROM analytics.fact_sales f
+
+
+LEFT JOIN analytics.dim_product p
+
+ON f.product_id = p.product_id
+
+
+GROUP BY
+
+    f.product_id,
+
+    p.product_category_name;
+	
+	CREATE TABLE analytics.customer_performance AS
+
+SELECT
+
+    f.customer_unique_id,
+
+    COUNT(DISTINCT f.order_id) AS total_orders,
+
+    ROUND(SUM(f.payment_value),2) AS total_revenue,
+
+    ROUND(SUM(f.profit),2) AS total_profit,
+
+    ROUND(
+        AVG(f.payment_value)::numeric,
+        2
+    ) AS avg_order_value,
+
+    MIN(f.order_date) AS first_purchase_date,
+
+    MAX(f.order_date) AS last_purchase_date
+
+
+FROM analytics.fact_sales f
+
+
+GROUP BY
+
+    f.customer_unique_id;
