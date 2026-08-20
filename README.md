@@ -42,8 +42,8 @@ Chart.js Dashboard
     ↓
 Webhook
 ```
-![w](screenshots/n8n_AI_architecture.png)
-![Sales and Orders Executive Dashboard](screenshots/Dashboard_Sales.png)
+![w](AI-sales-dashboard/screenshots/n8n_AI_architecture.png)
+![Sales and Orders Executive Dashboard](AI-sales-dashboard/screenshots/Dashboard_Sales.png)
 
 ## 2. IT Analytics Dashboard
 
@@ -67,6 +67,6 @@ An analytics project focused on IT operational data and business-oriented report
 
 ### Dashboard Preview
 
-![Overview Dashboard](screenshots/Dashboard.png)
+![Overview Dashboard](IT-Support-Analytics//screenshots/Dashboard.png)
 
 ---
