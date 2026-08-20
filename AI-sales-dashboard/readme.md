@@ -10,6 +10,7 @@ The project extracts validated business data from Azure SQL, processes and struc
 
 ![Sales and Orders Executive Dashboard](screenshots/Dashboard_Sales.png)
 ![Sales and Orders Executive Dashboards](screenshots/Dash_orders_revenue.png)
+![Sales and Order Executive Dashboards](screenshots/Dashboard_QA&BI.png)
 
 The dashboard provides an executive view of sales and order performance, including KPIs, revenue analysis, order status, customer geography, time trends and data quality indicators.
 
