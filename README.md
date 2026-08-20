@@ -6,11 +6,45 @@ This repository contains practical projects combining my background in **IT Oper
 
 ##  About Me
 
-I have over 10 years of experience in IT Operations, working with infrastructure, troubleshooting, deployments, access management, security, compliance and stakeholder communication.
+# IT & Data Analytics Portfolio
 
-More recently, I expanded my skills into **Data Analytics and BI**, working with SQL, data validation, data modeling, Dremio, Power BI and analytical datasets.
+## 👨‍💻 About Me
 
-I am currently focusing on roles where I can combine my IT background with SQL, data and automation skills.
+IT and Data professional with **10+ years of experience in IT Operations** and **1.5+ years of hands-on experience in Data Analytics and BI**.
+
+My recent experience includes working with **SQL, data validation, data analysis, data modeling, Dremio and Power BI**, with a focus on transforming business requirements into reliable analytical datasets and dashboards.
+
+I have worked closely with business stakeholders to understand requirements, validate data, prepare datasets and deliver meaningful reporting and visualizations.
+
+My previous IT Operations experience provides a strong technical foundation in troubleshooting, systems, access management, security, compliance and stakeholder communication.
+
+## 🛠️ Core Skills
+
+### Data & BI
+
+- SQL
+- Data Analysis
+- Data Validation
+- Data Modeling
+- Power BI
+- Dremio
+- ETL / Data Preparation
+- Dashboard Development
+
+### IT & Infrastructure
+
+- IT Operations
+- Troubleshooting
+- Active Directory
+- Access Management
+- Software Deployment
+- Security & Compliance
+
+### Automation
+
+- n8n
+- Webhooks
+- AI-assisted workflows
 
 ---
 
