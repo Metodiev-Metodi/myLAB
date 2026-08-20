@@ -16,33 +16,8 @@ I am currently focusing on roles where I can combine my IT background with SQL, 
 
 # Projects
 
-## 1. IT Analytics Dashboard
 
-An analytics project focused on IT operational data and business-oriented reporting.
-
-### Technologies
-
-- SQL
-- Power BI
-- Data Analytics
-- Data Modeling
-- BI Dashboards
-
-### Key areas
-
-- IT operational metrics
-- Data validation
-- KPI analysis
-- Dashboard development
-- Business insights
-
-### Dashboard Preview
-
-![IT Analytics Dashboard](IT-Analytics/screenshots/dashboard.png)
-
----
-
-## 2. AI-Powered Sales Analytics Dashboard
+## 1. AI-Powered Sales Analytics Dashboard
 
 An automated data-to-dashboard pipeline built with **n8n, Azure SQL, SQL, AI and Chart.js**.
 
@@ -66,3 +41,32 @@ AI HTML Generation
 Chart.js Dashboard
     ↓
 Webhook
+```
+![w](screenshots/n8n_AI_architecture.png)
+![Sales and Orders Executive Dashboard](screenshots/Dashboard_Sales.png)
+
+## 2. IT Analytics Dashboard
+
+An analytics project focused on IT operational data and business-oriented reporting.
+
+### Technologies
+
+- SQL
+- Power BI
+- Data Analytics
+- Data Modeling
+- BI Dashboards
+
+### Key areas
+
+- IT operational metrics
+- Data validation
+- KPI analysis
+- Dashboard development
+- Business insights
+
+### Dashboard Preview
+
+![Overview Dashboard](screenshots/Dashboard.png)
+
+---
