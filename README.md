@@ -95,6 +95,12 @@ n8n · AI Agent · RAG · PostgreSQL · pgvector · Embeddings · JavaScript · 
 
 Project Repository
 
+ ## Demo
+
+[▶️ Watch the Dental AI Receptionist Demo](demo/n8n.mp4)
+
+![Dental AI Receptionist Demo](demo/n8n.gif)
+
 👉 [View the full Dental AI Receptionist project](Dental-AI-receptionist/)
 ![Dental AI Receptionist](Dental-AI-receptionist/screenshots/Create_event.png)
 The project repository contains the n8n workflow, database screenshots, RAG retrieval examples and project documentation.
