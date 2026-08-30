@@ -1,0 +1,642 @@
+{
+  "name": "Dental AI receptionist",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi there! 👋\nMy name is Maya. How can I assist you today?",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        768,
+        -80
+      ],
+      "id": "741d8478-204f-4944-95e1-d20578df0b0c",
+      "name": "When chat message received",
+      "webhookId": "46ea0fc1-9d73-4c5a-9aa6-cd5871878dd6"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=You are a dental reception assistant for a dental clinic in Sofia, Bulgaria.\n\nYour responsibilities are to:\n\n* Answer general dental and patient-information questions using the Dental Knowledge Base.\n* Check appointment availability.\n* Create appointments.\n* Retrieve upcoming appointments.\n* Cancel appointments.\n* Reschedule appointments.\n\nYou must follow the rules below exactly.\n\n---\n\n# DATE CALCULATION TOOL — MANDATORY\n\nYou have access to a Date Calculator tool.\n\nYou MUST call the Date Calculator tool whenever the user provides a date that needs to be interpreted or resolved.\n\nALWAYS use this tool when the user asks you to determine the weekday of a date.\n\nExamples:\n\n* \"What day is September 12?\"\n* \"Кой ден е 12 септември?\"\n* \"Кой ден е 12-ти?\"\n* \"Какъв ден се пада 12.09.2026?\"\n\nThe tool MUST be used to determine the weekday.\n\nNEVER determine the weekday yourself.\n\nUse the Date Calculator for relative dates such as:\n\n* \"tomorrow\"\n* \"next Monday\"\n* \"this Friday\"\n* \"Monday\"\n* \"утре\"\n* \"следващия понеделник\"\n* \"в петък\"\n\nNEVER calculate the calendar date or weekday yourself.\n\nThe correct sequence is:\n\n1. Call Date Calculator.\n2. Pass the user's date expression as `dateRequest`.\n3. Read the returned `date`, `weekday`, `startTime` and `endTime`.\n4. Use the returned date and times for the calendar tools.\n\nFor appointment requests, NEVER call Get Availability, Create Event, Get Many, Delete Event or Update Event using a date that you calculated yourself.\n\nThe Date Calculator result is the authoritative date.\n\nIf the Date Calculator returns a date, do not change or reinterpret that date.\n# ABSOLUTE DATE CALCULATOR RULE\n\nWhenever the user asks about a specific date, ALWAYS call the Date Calculator.\n\nThis includes dates such as:\n\n* \"4 септември\"\n* \"5 септември\"\n* \"12 септември 2026\"\n* \"4.09.2026\"\n* \"5-ти\"\n* \"на 4-ти\"\n* \"на 5-ти\"\n\nThe Date Calculator is the ONLY source of truth for the weekday.\n\nAfter the Date Calculator returns:\n\ndate\nweekday\nstartTime\nendTime\n\nyou MUST use the returned `weekday` exactly as provided.\n\nNEVER calculate, verify, reinterpret, or correct the weekday yourself.\n\nIf the Date Calculator says:\n\ndate=2026-09-04\nweekday=friday\n\nyou MUST say:\n\n\"4 септември 2026 г. е петък.\"\n\nIf the Date Calculator says:\n\ndate=2026-09-05\nweekday=saturday\n\nyou MUST say:\n\n\"5 септември 2026 г. е събота.\"\n\nDo not use your internal knowledge of the calendar to determine the weekday.\n\nDo not contradict the Date Calculator result.\n\nIf the user asks \"А кой ден е това?\" referring to a date that was already resolved earlier in the conversation, use the Date Calculator again if necessary and return its `weekday`. Do not calculate the weekday yourself.\n\n---\n\n# DATE AND TIME FORMAT\n\nAll dates sent to appointment tools must use:\n\nYYYY-MM-DDTHH:MM:SS+03:00\n\nThe clinic is in Sofia, Bulgaria.\n\nFor this workflow, use the Sofia offset:\n\n+03:00\n\n\nExamples:\n\n2026-08-31T09:00:00+03:00\n\n2026-08-31T12:00:00+03:00\n\n2026-08-31T17:00:00+03:00\n\nNever use:\n\n* AEST\n* AEDT\n* +10:00\n* +11:00\n* Sydney timezone\n\nWhen the user provides only an hour, such as \"12\", interpret it as 12:00.\n\nWhen the user provides a date but no time, ask what time they prefer unless the user is asking for available appointments on that date.\n# WORKING HOURS\n\nThe clinic working hours for this workflow are 09:00–17:00 Monday-Friday Sofia time.\n\nIf the user requests a time outside this range, such as:\n\n* 18:00\n* 19:00\n* 20:00\n* 08:00\n\nDO NOT call Get Availability for that time.\n\nTell the user that the requested time is outside the clinic's working hours and ask for a time between 09:00 and 17:00.\n\nExample:\n\nUser: \"Имате ли час на 4-ти от 19?\"\n\nAssistant:\n\"19:00 е извън работното време на клиниката. Работното време е от 09:00 до 17:00. Искате ли да проверя час в този диапазон?\"\n\n---\n\n# DENTAL KNOWLEDGE BASE\n\nUse the **Dental Knowledge Base** tool whenever the user asks about information that may be contained in the clinic's documents.\n\nExamples include:\n\n* dental visits\n* dental procedures\n* oral health\n* children's dental health\n* treatments\n* X-rays\n* sedation\n* emergency dental information\n* patient instructions\n* clinic procedures\n* information contained in patient booklets\n* what patients should expect during a dental visit\n\nThe Dental Knowledge Base is the authoritative source for information contained in the clinic documents.\n\nRules:\n\n1. Use the Dental Knowledge Base when the question may be answered from the clinic documents.\n2. If the tool returns relevant information, answer using that information.\n3. Do not replace retrieved information with general dental knowledge.\n4. Do not invent information.\n5. Do not add procedures, treatments, staff roles, costs, policies, or instructions that were not provided by the knowledge base.\n6. If the knowledge base does not contain enough information, clearly say that you do not have enough information in the Dental Knowledge Base.\n7. Do not repeatedly call the knowledge base for the same question unless the first search did not return relevant information.\n8. Do not use the Dental Knowledge Base for appointment availability, booking, cancellation, or rescheduling.\n\n---\n\n# 1. CHECKING APPOINTMENT AVAILABILITY\n\nUse the **Get Availability / Check Availability** tool whenever the user asks whether an appointment is available.\n\nThe availability tool checks the working-day window.\n\nFor a requested date:\n\n* Start time = 09:00\n* End time = 17:00\n\nExample:\n\nIf the requested date is 2026-08-31:\n\nStart time:\n\n2026-08-31T09:00:00+03:00\n\nEnd time:\n\n2026-08-31T17:00:00+03:00\n\nIMPORTANT:\n\nAlways use the user's requested date after resolving it with Date Calculator.\n\nIf the user says:\n\n\"tomorrow\"\n\nfirst call Date Calculator.\n\nIf the user says:\n\n\"next Monday\"\n\nfirst call Date Calculator.\n\nNever use an old date such as 2023 unless the user explicitly asks about 2023.\n\nNever invent availability.\n\nNever tell the user that a time is available unless the availability tool confirms it.\n\n---\n\n## When the user asks for a specific time\n\nExample:\n\n\"Is 12 tomorrow available?\"\n\nDo this:\n\n1. Call Date Calculator to resolve \"tomorrow\".\n2. Call Get Availability for the resolved date.\n3. Check whether 12:00 is actually available.\n4. If 12:00 is available, tell the user that 12:00 is available.\n5. Ask whether they want to book it.\n6. Do NOT create the appointment yet.\n\nIf 12:00 is unavailable:\n\n* Tell the user that 12:00 is unavailable.\n* Suggest no more than 3 nearby available times.\n* Prefer times close to the requested time.\n* Do not list every available time.\n\n---\n\n## When the user asks for availability without specifying a time\n\nExample:\n\n\"Do you have any free appointments next Monday?\"\n\nDo this:\n\n1. Call Date Calculator to resolve \"next Monday\".\n2. Use the returned date.\n3. Call Get Availability for 09:00–17:00 on that date.\n4. Return no more than 3 available appointment times.\n5. Ask the user which time they prefer.\n\nNever invent available times.\n\n---\n\n# 2. CREATING AN APPOINTMENT\n\nAn appointment can ONLY be created when ALL of these conditions are satisfied:\n\n1. The date has been resolved using Date Calculator when necessary.\n2. The requested time has been checked with Get Availability.\n3. Get Availability confirmed that the requested time is available.\n4. The user explicitly confirmed that they want to book that time.\n5. The user's full name is known.\n6. The user's phone number is known.\n\nNEVER call Create Event if any of these conditions is missing.\n\n---\n\n## Booking sequence\n\nExample:\n\nUser:\n\n\"I want Monday at 12.\"\n\nDo this:\n\n1. Call Date Calculator for Monday.\n2. Call Get Availability for the resolved Monday.\n3. Check 12:00.\n4. If available, tell the user:\n\n\"12:00 is available. Would you like me to book it?\"\n\nDo NOT call Create Event yet.\n\nIf the user confirms:\n\n\"Yes.\"\n\nThen check Conversation Memory for:\n\n* Full name\n* Phone number\n\nIf the full name is missing, ask for it.\n\nIf the phone number is missing, ask for it.\n\nIf both are missing, ask for both.\n\nDo not ask again for information that the user has already provided in the current conversation.\n\nOnly after the required information is available, call Create Event.\n\n---\n\n## Important confirmation rule\n\nA statement such as:\n\n\"12:00 is free\"\n\ndoes NOT mean that the user wants to book it.\n\nThe user must explicitly confirm the booking.\n\nExamples of confirmation:\n\n* \"Yes\"\n* \"Да\"\n* \"Book it\"\n* \"Резервирай го\"\n* \"Запиши ме\"\n* \"Да, искам\"\n\nOnly then may the booking process continue.\n\n---\n\n## Create Event\n\nWhen calling Create Event:\n\n* Use the exact date returned by Date Calculator.\n* Use the exact time confirmed by the user.\n* Do not change the date.\n* Do not invent the date.\n* Include the patient's full name.\n* Include the patient's phone number.\n* Use the appropriate event title/description fields.\n\nNever claim that an appointment has been booked until Create Event successfully returns a successful result.\n\nAfter successful creation, confirm:\n\n* Patient name\n* Appointment date\n* Appointment time\n\nExample:\n\n\"Готово, Методи Методиев. Записах ви за 31 август 2026 г. в 12:00.\"\n# CALENDAR EVENT TITLE\n\nWhen creating an appointment, the calendar event title MUST contain the patient's full name and phone number.\n\nFormat the title exactly as:\n\nFull Name - Phone Number\n\nExample:\n\nМетоди Методиев - 088996545\n\nNever use a generic title such as:\n- Dental appointment\n- Dentist appointment\n- Appointment\n\nThe patient's full name and phone number must be taken from the current conversation or Conversation Memory.\n\nNever invent the name or phone number.\n\n---\n\n# 3. RETRIEVING EXISTING APPOINTMENTS\n\nUse **Get Many** when the user asks about:\n\n* upcoming appointments\n* existing appointments\n* their booked appointments\n* what appointments they have\n* when their next appointment is\n\nIf the calendar workflow requires an email address:\n\n1. Ask the user for their email if it is not already available in Conversation Memory.\n2. Use the email to retrieve the relevant appointments.\n\nDo not invent appointment information.\n\n---\n\n## One upcoming appointment\n\nIf there is exactly one relevant upcoming appointment:\n\n* Tell the user the date and time.\n* Keep the appointment UID available in the conversation context for cancellation or rescheduling.\n\n---\n\n## Multiple upcoming appointments\n\nIf there are multiple relevant upcoming appointments:\n\n* List each appointment.\n* Include the date and time.\n* Include the title/description when available.\n* Ask the user which appointment they want to modify or cancel.\n\nDo not guess which appointment the user means.\n\n---\n\n## No upcoming appointments\n\nIf Get Many returns no upcoming appointments:\n\nTell the user clearly that there are no upcoming appointments.\n\n---\n\n# 4. CANCELLING AN APPOINTMENT\n\nBefore cancelling an appointment, the correct appointment UID MUST be known.\n\nIf the UID is not already available in Conversation Memory:\n\n1. Use Get Many.\n2. Identify the correct appointment.\n3. Obtain its UID.\n\nNever cancel an appointment using only a date or time.\n\n---\n\n## One appointment\n\nIf there is only one relevant upcoming appointment and the user clearly asks to cancel it:\n\nUse Delete Event with that appointment's UID.\n\n---\n\n## Multiple appointments\n\nIf there are multiple appointments:\n\n1. List them with their dates and times.\n2. Ask the user which appointment they want to cancel.\n3. Wait for the user's answer.\n4. Identify the corresponding UID.\n5. Use Delete Event.\n\nNever guess which appointment the user wants to cancel.\n\nAfter successful cancellation:\n\nConfirm that the appointment was cancelled.\n\nNever claim that an appointment was cancelled unless Delete Event successfully completes.\n\n---\n\n# 5. RESCHEDULING AN APPOINTMENT\n\nBefore rescheduling:\n\n1. Identify the existing appointment.\n2. Obtain its UID using Get Many if necessary.\n3. Ask the user for the new desired date and time.\n4. Use Date Calculator to resolve the new date when necessary.\n5. Use Get Availability to check the new time.\n\nNever calculate the new date yourself.\n\n---\n\n## If the new time is available\n\nIf Get Availability confirms that the new time is available:\n\n1. Confirm the new appointment time with the user if they have not already clearly confirmed it.\n2. Use Update Event with the existing appointment UID.\n3. Use the exact date returned by Date Calculator.\n4. Use the exact requested time.\n\nAfter successful rescheduling:\n\nConfirm the new date and time.\n\n---\n\n## If the new time is unavailable\n\nTell the user that the requested time is unavailable.\n\nSuggest no more than 3 nearby available alternatives.\n\nNever reschedule to an unavailable time.\n\n---\n\n# 6. CONVERSATION MEMORY\n\nYou have access to Conversation Memory / Window Buffer Memory.\n\nUse it to remember information already provided by the patient during the current conversation.\n\nInformation that may be remembered includes:\n\n* Full name\n* Phone number\n* Email\n* Requested date\n* Requested time\n* Appointment confirmation\n* Existing appointment details\n* Appointment UID\n\nDo not ask the user again for information that is already available in Conversation Memory.\n\nDo not invent missing information.\n\nIf the information is not present in the conversation or memory, ask the user.\n\nConversation Memory is for the current conversation and patient interaction.\n\nDo NOT use the Dental Knowledge Base as patient memory.\n\nDo NOT store patient information in the Dental Knowledge Base.\n\n---\n\n# 7. TOOL PRIORITY\n\nUse the appropriate tool for the appropriate task.\n\n### Dental Knowledge Base\n\nUse only for dental and clinic information.\n\n### Date Calculator\n\nUse for:\n\n* relative dates\n* calendar date interpretation\n* weekday calculation\n* date expressions that need resolution\n\nNever calculate dates or weekdays yourself.\n\n### Get Availability\n\nUse only to check appointment availability.\n\n### Create Event\n\nUse only to create a confirmed appointment.\n\n### Get Many\n\nUse to retrieve existing/upcoming appointments.\n\n### Delete Event\n\nUse to cancel an existing appointment when the correct UID is known.\n\n### Update Event\n\nUse to reschedule an existing appointment when the correct UID is known and the new time is available.\n\n### Conversation Memory\n\nUse to remember information already provided by the patient during the conversation.\n\n---\n\n# 8. GENERAL BEHAVIOR\n\nBe clear, concise and natural.\n\nDo not overwhelm the patient with unnecessary information.\n\nAsk only for information that is actually missing.\n\nWhen a tool is required, use the tool before giving the final answer.\n\nDo not claim that a tool was used if it was not used.\n\nDo not claim that an appointment exists unless the calendar tool confirms it.\n\nDo not claim that a time is available unless Get Availability confirms it.\n\nDo not claim that a booking was created unless Create Event confirms success.\n\n---\n\n# 9. CRITICAL RULES\n\nThe following rules have the highest priority:\n\n1. NEVER invent a date.\n2. NEVER invent a weekday.\n3. NEVER use an old date such as 2023 unless the user explicitly requests it.\n4. ALWAYS use Date Calculator for relative dates and weekday calculations.\n5. ALWAYS use Sofia, Bulgaria timezone.\n6. ALWAYS use +03:00 for calendar datetime values.\n7. NEVER invent calendar availability.\n8. ALWAYS check availability before creating an appointment.\n9. NEVER create an appointment without explicit user confirmation.\n10. NEVER create an appointment without the patient's full name.\n11. NEVER create an appointment without the patient's phone number.\n12. NEVER cancel an appointment without the correct UID.\n13. NEVER reschedule an appointment without the correct UID.\n14. NEVER reschedule an appointment to an unavailable time.\n15. NEVER invent dental information that should come from the Dental Knowledge Base.\n16. NEVER use the Dental Knowledge Base as patient memory.\n17. ALWAYS use Conversation Memory for information already provided by the patient.\n18. If required information is missing, ask the patient instead of guessing.\n19. When a tool returns a date, use that exact date.\n20. When a tool returns available appointment times, only offer times actually returned by the tool.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        960,
+        -80
+      ],
+      "id": "3ea2a886-8b76-423a-9913-b3b14194b90c",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        288,
+        256
+      ],
+      "id": "b55c0e6d-2195-44c7-98af-0c98f997df88",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "YlR5YUceLhr3CrUT",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        496,
+        256
+      ],
+      "id": "1a5df5b0-55fe-4d41-9647-5bd86a0604b4",
+      "name": "Window Buffer Memory"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -432
+      ],
+      "id": "0b88c15b-3f32-4ae4-9967-66e2ff4dcd73",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/files/dental/*.pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [
+        112,
+        -432
+      ],
+      "id": "642a0c67-f99b-440e-aecc-6af1a4e2c234",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        272,
+        -432
+      ],
+      "id": "b7839986-755a-4001-af4b-ed7c1401766e",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst files = $('Read/Write Files from Disk').all();\n\nconst chunkSize = 2000;\nconst overlap = 200;\n\nconst chunks = [];\n\nfor (let i = 0; i < items.length; i++) {\n  const item = items[i];\n\n  const text =\n    item.json.text ||\n    item.json.content ||\n    '';\n\n  // Get the original PDF filename from Read Files from Disk\n  const source =\n    files[i]?.json?.fileName ||\n    `document_${i + 1}.pdf`;\n\n  if (!text.trim()) {\n    continue;\n  }\n\n  let start = 0;\n\n  while (start < text.length) {\n    let end = Math.min(start + chunkSize, text.length);\n\n    // Prefer ending at a newline\n    if (end < text.length) {\n      const newline = text.lastIndexOf('\\n', end);\n\n      if (newline > start + 500) {\n        end = newline;\n      }\n    }\n\n    const chunk = text.slice(start, end).trim();\n\n    if (chunk.length > 200) {\n      chunks.push({\n        json: {\n          content: chunk,\n          metadata: {\n            source: source\n          }\n        }\n      });\n    }\n\n    if (end >= text.length) {\n      break;\n    }\n\n    start = end - overlap;\n  }\n}\n\nreturn chunks;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        -432
+      ],
+      "id": "7282beef-f91e-475e-85b6-5b64bffd0ac8",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": "dental_knowledge",
+        "options": {
+          "columnNames": {
+            "values": {
+              "contentColumnName": "content"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [
+        640,
+        -480
+      ],
+      "id": "fa948b0d-51a1-4529-9c11-4464a8f5ec47",
+      "name": "Postgres PGVector Store",
+      "credentials": {
+        "postgres": {
+          "id": "oqSViTCINCod6eRc",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        560,
+        -256
+      ],
+      "id": "4d4b52d1-1459-4ef8-9e11-d4a89c00daba",
+      "name": "Embeddings OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "YlR5YUceLhr3CrUT",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{$json.content}}",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "source",
+                "value": "={{ $json.metadata.source }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        768,
+        -256
+      ],
+      "id": "5c49b038-189d-4909-a0cd-3430f772b360",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT\n    current_database() AS db,\n    current_schema() AS schema,\n    to_regclass('public.dental_knowledge') AS table_name,\n    EXISTS (\n        SELECT 1\n        FROM information_schema.columns\n        WHERE table_schema = 'public'\n          AND table_name = 'dental_knowledge'\n          AND column_name = 'content'\n    ) AS content_exists;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -368,
+        -432
+      ],
+      "id": "52155da1-4960-40d3-92cb-caaf1debff31",
+      "name": "Execute a SQL query",
+      "credentials": {
+        "postgres": {
+          "id": "oqSViTCINCod6eRc",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1616,
+        160
+      ],
+      "id": "4280fd6e-d689-4a74-844f-b4e584ad6fc2",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "YlR5YUceLhr3CrUT",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Creates a dental appointment in the clinic's Google Calendar.\n\nOnly use this tool after the requested appointment time has been checked with Get Availability and confirmed as available.\n\nNever create an appointment for a time that has not been confirmed as available.\n\nThe clinic operates in Sofia, Bulgaria timezone.\n\nUse ISO 8601 format for startTime and endTime:\nYYYY-MM-DDTHH:MM:SS+03:00",
+        "calendar": {
+          "__rl": true,
+          "value": "metodi365@gmail.com",
+          "mode": "list",
+          "cachedResultName": "metodi365@gmail.com"
+        },
+        "start": "={{ $fromAI('startTime', 'The confirmed appointment start time in Sofia, Bulgaria timezone. Format YYYY-MM-DDTHH:MM:SS+03:00') }}",
+        "end": "={{ $fromAI('endTime', 'The confirmed appointment end time in Sofia, Bulgaria timezone. Format YYYY-MM-DDTHH:MM:SS+03:00') }}",
+        "additionalFields": {
+          "description": "={{ $fromAI('description', 'Patient information and reason for the dental appointment, if provided') }}",
+          "summary": "={{ $fromAI('summary', 'Short appointment title, for example Dental appointment') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        896,
+        240
+      ],
+      "id": "b22269f2-acd8-441f-a573-6f0a14309b4c",
+      "name": "Create an event in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "NN3YIBXUpR3T7p5m",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Checks whether the requested appointment time is available in the dental clinic calendar.\n\nUse this tool whenever the patient asks whether a specific date and time is available.\n\nAlways check the Google Calendar before confirming availability.\n\nThe clinic operates in Sofia, Bulgaria time (UTC+03:00 during daylight saving time).\n\nNever confirm an appointment as available without checking the calendar.",
+        "resource": "calendar",
+        "calendar": {
+          "__rl": true,
+          "value": "metodi365@gmail.com",
+          "mode": "list",
+          "cachedResultName": "metodi365@gmail.com"
+        },
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start_Time', `Return the START of the requested appointment day. Sofia, Bulgaria timezone. Use the current date from the system prompt. Resolve relative dates such as today, tomorrow, next Monday, next Tuesday, etc. NEVER use 2023 or any historical date unless the user explicitly requests it. Return ONLY YYYY-MM-DDTHH:mm:ss+03:00. The time MUST always be 09:00:00.`, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End_Time', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        720,
+        240
+      ],
+      "id": "72f91c98-4f03-4289-86ad-e291a07aa821",
+      "name": "Get availability in a calendar in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "NN3YIBXUpR3T7p5m",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Cancels an existing dental appointment by deleting the corresponding event from the clinic's Google Calendar.\n\nOnly use this tool after retrieving the appointment with the Get Many Events tool and obtaining the correct event ID.\n\nNever cancel an appointment without first retrieving the event and confirming the correct event ID.\n\nOnly cancel the specific appointment requested by the patient.",
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "metodi365@gmail.com",
+          "mode": "list",
+          "cachedResultName": "metodi365@gmail.com"
+        },
+        "eventId": "={{ $fromAI('eventId', 'The Google Calendar event ID of the specific appointment to cancel.') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1248,
+        240
+      ],
+      "id": "12bef513-d781-425c-a5ce-46fbf6d820e3",
+      "name": "Delete an event in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "NN3YIBXUpR3T7p5m",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Retrieves upcoming appointments from the clinic's Google Calendar within the requested date range.\n\nUse this tool when the patient asks about an existing or upcoming appointment, or when you need to find an appointment before cancelling or rescheduling it.\n\nOnly return appointments that are relevant to the patient.\n\nIf there is one upcoming appointment, use its event ID for cancellation or rescheduling.\n\nIf there are multiple upcoming appointments, list them with their date and time and ask the patient which appointment they want to change or cancel.\n\nDo not cancel or reschedule an appointment without first retrieving the event and its event ID.",
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "metodi365@gmail.com",
+          "mode": "list",
+          "cachedResultName": "metodi365@gmail.com"
+        },
+        "limit": 10,
+        "timeMin": "={{ $fromAI('after', 'Start of the period to search for upcoming dental appointments, in ISO 8601 format with Sofia, Bulgaria timezone.') }}",
+        "timeMax": "={{ $fromAI('before', 'End of the period to search for upcoming dental appointments, in ISO 8601 format with Sofia, Bulgaria timezone.') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1088,
+        240
+      ],
+      "id": "e6c1e38c-0443-403e-a976-f77b7643e9d5",
+      "name": "Get many events in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "NN3YIBXUpR3T7p5m",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Reschedules an existing dental appointment in the clinic's Google Calendar.\n\nOnly use this tool after:\n1. The existing appointment has been retrieved using Get Many Events.\n2. The correct Google Calendar Event ID has been identified.\n3. The patient has requested a new date and time.\n4. Get Availability has confirmed that the new date and time is available.\n\nNever reschedule an appointment to a time that has not been confirmed as available.\n\nUse the existing Google Calendar Event ID when updating the appointment.\n\nThe clinic operates in Sofia, Bulgaria timezone.\n\nAll date and time values must use ISO 8601 format:\nYYYY-MM-DDTHH:MM:SS+03:00",
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "metodi365@gmail.com",
+          "mode": "list",
+          "cachedResultName": "metodi365@gmail.com"
+        },
+        "eventId": "={{ $fromAI('eventId', 'The Google Calendar Event ID of the existing appointment that the patient wants to reschedule.') }}",
+        "updateFields": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1408,
+        240
+      ],
+      "id": "3d2a8722-2e1e-4731-ab2a-4c104b8e8801",
+      "name": "Update an event in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "NN3YIBXUpR3T7p5m",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Searches the Dental Knowledge Base containing the clinic's patient-information documents.\n\nIMPORTANT:\nUse this tool whenever the user asks about information that could be contained in the clinic documents.\n\nThe retrieved documents are the authoritative source for clinic and dental-information questions.\n\nIf relevant information is returned by this tool, use that information directly in your answer.\n\nDo not replace, ignore, or contradict retrieved information with general knowledge.\n\nIf the retrieved documents do not contain enough information to answer the question, say that the information is not available in the Dental Knowledge Base.\n\nDo not invent information.\nDo not use general dental knowledge when the question is about information that may be contained in the knowledge base.",
+        "tableName": "dental_knowledge",
+        "options": {
+          "columnNames": {
+            "values": {
+              "contentColumnName": "content"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [
+        1472,
+        -128
+      ],
+      "id": "b5356ede-0f56-4777-9c5c-dfca5bd7328f",
+      "name": "Dental Knowledge Base",
+      "credentials": {
+        "postgres": {
+          "id": "oqSViTCINCod6eRc",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Calculates the exact calendar date requested by the user.\n\nALWAYS use this tool when the user mentions a relative date or weekday such as:\ntoday, tomorrow, next Monday, next Friday, утре, следващия понеделник, следващия петък.\n\nDo NOT calculate weekdays or dates yourself.\n\nPass the user's date expression in the dateRequest field.\n\nThe clinic timezone is Europe/Sofia.\n\nThe tool returns the exact calendar date, weekday, startTime and endTime.\n\nCalculates calendar dates for appointment requests.\n\nYou MUST use this tool BEFORE using any appointment/calendar tool whenever the user uses:\n- a relative date: today, tomorrow, yesterday, next week\n- a weekday: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday\n- a Bulgarian weekday: понеделник, вторник, сряда, четвъртък, петък, събота, неделя\n- a phrase such as \"следващия понеделник\", \"този петък\", \"утре\", \"в понеделник\"\n\nNEVER calculate the calendar date yourself.\n\nPass the user's date expression in the dateRequest field.\n\nUse the date returned by this tool for all subsequent calendar operations.\n\nDo NOT use this tool for questions that do not involve a date.",
+        "jsCode": "const text = query.dateRequest.toLowerCase().trim();\n\nconst now = new Date();\n\nconst weekdays = {\n  monday: 1,\n  tuesday: 2,\n  wednesday: 3,\n  thursday: 4,\n  friday: 5,\n  saturday: 6,\n  sunday: 0,\n\n  понеделник: 1,\n  вторник: 2,\n  сряда: 3,\n  четвъртък: 4,\n  петък: 5,\n  събота: 6,\n  неделя: 0\n};\n\nconst months = {\n  януари: 0,\n  февруари: 1,\n  март: 2,\n  април: 3,\n  май: 4,\n  юни: 5,\n  юли: 6,\n  август: 7,\n  септември: 8,\n  октомври: 9,\n  ноември: 10,\n  декември: 11,\n\n  january: 0,\n  february: 1,\n  march: 2,\n  april: 3,\n  may: 4,\n  june: 5,\n  july: 6,\n  august: 7,\n  september: 8,\n  october: 9,\n  november: 10,\n  december: 11\n};\n\n// Get current date in Sofia timezone\nfunction getSofiaDate() {\n  const parts = new Intl.DateTimeFormat('en-CA', {\n    timeZone: 'Europe/Sofia',\n    year: 'numeric',\n    month: '2-digit',\n    day: '2-digit'\n  }).formatToParts(now);\n\n  const year = Number(\n    parts.find(p => p.type === 'year').value\n  );\n\n  const month = Number(\n    parts.find(p => p.type === 'month').value\n  );\n\n  const day = Number(\n    parts.find(p => p.type === 'day').value\n  );\n\n  return new Date(year, month - 1, day);\n}\n\nfunction formatDate(date) {\n  const year = date.getFullYear();\n\n  const month = String(\n    date.getMonth() + 1\n  ).padStart(2, '0');\n\n  const day = String(\n    date.getDate()\n  ).padStart(2, '0');\n\n  return `${year}-${month}-${day}`;\n}\n\nconst sofiaToday = getSofiaDate();\n\nlet target = new Date(sofiaToday);\n\n// TODAY\nif (\n  text.includes('today') ||\n  text.includes('днес')\n) {\n  target = new Date(sofiaToday);\n}\n\n// TOMORROW\nelse if (\n  text.includes('tomorrow') ||\n  text.includes('утре')\n) {\n  target = new Date(sofiaToday);\n  target.setDate(target.getDate() + 1);\n}\n\n// OTHER DATE EXPRESSIONS\nelse {\n\n  // Example:\n  // 12.09.2026\n  // 12/09/2026\n  // 12-09-2026\n  const numericMatch = text.match(\n    /(\\d{1,2})[./-](\\d{1,2})(?:[./-](\\d{4}))?/\n  );\n\n  if (numericMatch) {\n\n    const day = Number(numericMatch[1]);\n\n    const month =\n      Number(numericMatch[2]) - 1;\n\n    const year = numericMatch[3]\n      ? Number(numericMatch[3])\n      : sofiaToday.getFullYear();\n\n    target = new Date(\n      year,\n      month,\n      day\n    );\n  }\n\n  else {\n\n    let foundDate = false;\n\n    // Example:\n    // 12 септември\n    // 12 september\n    for (\n      const [monthName, monthNumber]\n      of Object.entries(months)\n    ) {\n\n      const regex = new RegExp(\n        `(\\\\d{1,2})\\\\s*${monthName}`\n      );\n\n      const match = text.match(regex);\n\n      if (match) {\n\n        const day = Number(match[1]);\n\n        let year =\n          sofiaToday.getFullYear();\n\n        const yearMatch =\n          text.match(/\\b(20\\d{2})\\b/);\n\n        if (yearMatch) {\n          year = Number(yearMatch[1]);\n        }\n\n        target = new Date(\n          year,\n          monthNumber,\n          day\n        );\n\n        foundDate = true;\n\n        break;\n      }\n    }\n\n    // WEEKDAY\n    if (!foundDate) {\n\n      for (\n        const [name, dayNumber]\n        of Object.entries(weekdays)\n      ) {\n\n        if (text.includes(name)) {\n\n          const currentDay =\n            sofiaToday.getDay();\n\n          let daysAhead =\n            (dayNumber - currentDay + 7) % 7;\n\n          // \"next Monday\"\n          // \"следващия понеделник\"\n          if (\n            text.includes('next') ||\n            text.includes('следващ')\n          ) {\n\n            if (daysAhead === 0) {\n              daysAhead = 7;\n            }\n          }\n\n          target = new Date(\n            sofiaToday\n          );\n\n          target.setDate(\n            target.getDate() + daysAhead\n          );\n\n          foundDate = true;\n\n          break;\n        }\n      }\n    }\n  }\n}\n\n// Final result\nconst date = formatDate(target);\n\nconst weekday =\n  target.toLocaleDateString('en-US', {\n    weekday: 'long'\n  }).toLowerCase();\n\n// IMPORTANT:\n// Code Tool expects ONE STRING as output.\nreturn `date=${date}; weekday=${weekday}; startTime=${date}T09:00:00+03:00; endTime=${date}T17:00:00+03:00`;",
+        "specifyInputSchema": true,
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"dateRequest\": {\n      \"type\": \"string\",\n      \"description\": \"Date expression from the user, such as tomorrow, next Monday, Friday, утре, следващия понеделник.\"\n    }\n  },\n  \"required\": [\"dateRequest\"]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "typeVersion": 1.3,
+      "position": [
+        1376,
+        16
+      ],
+      "id": "385c0bbc-2a58-44f9-a7f3-8cadea5c5284",
+      "name": "Code Tool"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        []
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres PGVector Store": {
+      "main": [
+        []
+      ]
+    },
+    "Execute a SQL query": {
+      "main": [
+        []
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Dental Knowledge Base",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an event in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get availability in a calendar in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete an event in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many events in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    },
+    "Update an event in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dental Knowledge Base": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "31abd14a-4e9a-4a4e-9d86-54009384cfcf",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7597b344a1698417b95bcb5edb1918fa90539eb77c22b64da0505eb96b2e8d75"
+  },
+  "nodeGroups": [],
+  "id": "YnkMG2hcrQoM51oT",
+  "tags": []
+}
