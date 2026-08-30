@@ -60,26 +60,35 @@ Key Features
 - Natural-language date and time handling
 - Conversation memory
 - Patient name and phone collection during booking
-Architecture
+  
+## Architecture
+
+```text
 User
- ↓
+  │
+  ▼
 n8n AI Agent
- ├── Dental Knowledge Base
- │      ↓
- │   Embeddings
- │      ↓
- │   PostgreSQL + pgvector
- │
- ├── Date Calculator
- │
- ├── Conversation Memory
- │
- └── Google Calendar
-        ├── Availability
-        ├── Create Event
-        ├── Get Appointments
-        ├── Cancel
-        └── Reschedule
+  │
+  ├── Dental Knowledge Base
+  │       │
+  │       ▼
+  │    Embeddings
+  │       │
+  │       ▼
+  │    PostgreSQL + pgvector
+  │
+  ├── Date Calculator
+  │
+  ├── Conversation Memory
+  │
+  └── Google Calendar
+          │
+          ├── Check Availability
+          ├── Create Event
+          ├── Get Appointments
+          ├── Cancel Appointment
+          └── Reschedule Appointment
+```
 Technologies
 
 n8n · AI Agent · RAG · PostgreSQL · pgvector · Embeddings · JavaScript · Google Calendar
