@@ -36,10 +36,7 @@ My previous IT Operations experience provides a strong technical foundation in t
 
 - n8n
 - AI Agents
-- RAG
-- Vector Databases
-- PostgreSQL / pgvector
-- Embeddings
+- PostgreSQL
 - API Integrations
 - Webhooks
 
