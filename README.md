@@ -35,15 +35,66 @@ My previous IT Operations experience provides a strong technical foundation in t
 ### Automation
 
 - n8n
+- AI Agents
+- RAG
+- Vector Databases
+- PostgreSQL / pgvector
+- Embeddings
+- API Integrations
 - Webhooks
-- AI-assisted workflows
 
 ---
 
 # Projects
 
+## 1. AI-Powered Dental Receptionist
 
-## 1. AI-Powered Sales Analytics Dashboard
+An AI-powered dental reception assistant built with n8n, RAG, PostgreSQL/pgvector, embeddings, JavaScript and Google Calendar.
+
+The project demonstrates how an AI agent can combine a document-based knowledge base with external tools to answer dental information questions and manage real-world appointment workflows.
+
+Key Features
+- RAG-based dental knowledge retrieval
+- PDF document ingestion and chunking
+- Semantic search using PostgreSQL + pgvector
+- AI Agent orchestration with n8n
+- Google Calendar availability checking
+- Appointment creation, cancellation and rescheduling
+- Natural-language date and time handling
+- Conversation memory
+- Patient name and phone collection during booking
+Architecture
+User
+ ↓
+n8n AI Agent
+ ├── Dental Knowledge Base
+ │      ↓
+ │   Embeddings
+ │      ↓
+ │   PostgreSQL + pgvector
+ │
+ ├── Date Calculator
+ │
+ ├── Conversation Memory
+ │
+ └── Google Calendar
+        ├── Availability
+        ├── Create Event
+        ├── Get Appointments
+        ├── Cancel
+        └── Reschedule
+Technologies
+
+n8n · AI Agent · RAG · PostgreSQL · pgvector · Embeddings · JavaScript · Google Calendar
+
+Project Repository
+
+👉 [View the full Dental AI Receptionist project](Dental-AI-receptionist/)
+![Dental AI Receptionist](Dental-AI-receptionist/screenshots/Create_event.png)
+The project repository contains the n8n workflow, database screenshots, RAG retrieval examples and project documentation.
+
+
+## 2. AI-Powered Sales Analytics Dashboard
 
 An automated data-to-dashboard pipeline built with **n8n, Azure SQL, SQL, AI and Chart.js**.
 
@@ -71,7 +122,7 @@ Webhook
 ![w](AI-sales-dashboard/screenshots/n8n_AI_architecture.png)
 ![Sales and Orders Executive Dashboard](AI-sales-dashboard/screenshots/Dashboard_Sales.png)
 
-## 2. IT Analytics Dashboard
+## 3. IT Analytics Dashboard
 
 An analytics project focused on IT operational data and business-oriented reporting.
 
