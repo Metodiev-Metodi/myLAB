@@ -1,11 +1,10 @@
-#  Dental AI Receptionist
+#  Dental AI Receptionist 
 
 An AI-powered dental reception assistant built with **n8n**, **RAG**, **PostgreSQL/pgvector**, **LLM tools**, and **Google Calendar**.
 
 The assistant can answer dental information questions using a document-based knowledge base, check appointment availability, and manage calendar appointments through a conversational interface.
 
 ---
-
 ##  Project Overview
 
 This project demonstrates how an AI agent can automate common dental receptionist tasks while using a controlled knowledge base for clinic-related information.
@@ -23,6 +22,10 @@ The system combines:
 * Appointment availability and booking workflows
 
 The project was built as a practical **AI automation / RAG application using n8n**.
+
+ ## Demo
+
+[▶️ Watch the Dental AI Receptionist Demo](demo/dental-ai-demo.mp4)
 
 ---
 
