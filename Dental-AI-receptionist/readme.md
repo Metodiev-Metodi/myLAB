@@ -27,8 +27,7 @@ The project was built as a practical **AI automation / RAG application using n8n
 
 [▶️ Watch the Dental AI Receptionist Demo](demo/n8n.mp4)
 
-## Preview
-[Watch the Dental AI Receptionist Preview](demo/n8n.gif)
+![Dental AI Receptionist Demo](demo/n8n.gif)
 ---
 
 ##  Features
