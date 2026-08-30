@@ -311,8 +311,11 @@ dental-ai-receptionist/
 
 ##  Screenshots
 
-### n8n Workflow & RAG Retrieval
+### n8n Workflow & Appointment Booking
 
+![n8n Workflow](screenshots/Create_event.png)
+
+###  RAG Retrieval
 
 ![n8n Workflow1](screenshots/RAG.png)
 ![n8n Workflow12](screenshots/RAG_usage.png)
@@ -326,10 +329,6 @@ dental-ai-receptionist/
 
 ![RAG Sources](database/rag-sources.png)
 
-
-### Appointment Booking
-
-![n8n Workflow](screenshots/Create_event.png)
 
 ---
 
