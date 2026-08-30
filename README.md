@@ -125,6 +125,8 @@ Chart.js Dashboard
     ↓
 Webhook
 ```
+👉 [View the full AI Sales Dashboard project](AI-sales-dashboard/)
+
 ![w](AI-sales-dashboard/screenshots/n8n_AI_architecture.png)
 ![Sales and Orders Executive Dashboard](AI-sales-dashboard/screenshots/Dashboard_Sales.png)
 
@@ -147,7 +149,8 @@ An analytics project focused on IT operational data and business-oriented report
 - KPI analysis
 - Dashboard development
 - Business insights
-
+  
+👉 [View the full IT Support Analytics project](IT-Support-Analytics/)
 ### Dashboard Preview
 
 ![Overview Dashboard](IT-Support-Analytics//screenshots/Dashboard.png)
