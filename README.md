@@ -97,9 +97,8 @@ Project Repository
 
  ## Demo
 
-[▶️ Watch the Dental AI Receptionist Demo](demo/n8n.mp4)
-
-![Dental AI Receptionist Demo](demo/n8n.gif)
+[▶️ Watch the Dental AI Receptionist Demo](Dental-AI-receptionist/demo/n8n.mp4)
+![Dental AI Receptionist Demo](Dental-AI-receptionist/demo/n8n.gif)
 
 👉 [View the full Dental AI Receptionist project](Dental-AI-receptionist/)
 ![Dental AI Receptionist](Dental-AI-receptionist/screenshots/Create_event.png)
