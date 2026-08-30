@@ -311,9 +311,12 @@ dental-ai-receptionist/
 
 ##  Screenshots
 
-### n8n Workflow
+### n8n Workflow & RAG Retrieval
 
-![n8n Workflow](screenshots/n8n-workflow.png)
+
+![n8n Workflow1](screenshots/RAG.png)
+![n8n Workflow12](screenshots/RAG_usage.png)
+![n8n Workflow13](screenshots/RAG_.png)
 
 ### PostgreSQL / pgvector
 
@@ -323,13 +326,10 @@ dental-ai-receptionist/
 
 ![RAG Sources](database/rag-sources.png)
 
-### RAG Retrieval
-
-![RAG Retrieval](screenshots/rag-retrieval.png)
 
 ### Appointment Booking
 
-![Appointment Booking](screenshots/booking.png)
+![n8n Workflow](screenshots/Create_event.png)
 
 ---
 
