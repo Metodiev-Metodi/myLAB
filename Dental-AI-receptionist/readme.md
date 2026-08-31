@@ -157,21 +157,21 @@ This prevents the AI agent from manually calculating calendar dates and reduces 
                          │      AI Agent        │
                          └──────────┬───────────┘
                                     │
-                ┌───────────────────┼───────────────────┐
-                │                   │                   │
-                ▼                   ▼                   ▼
-       ┌────────────────┐  ┌────────────────┐  ┌─────────────────┐
-       │ Dental RAG     │  │ Date Calculator │  │ Google Calendar │
-       │ Knowledge Base │  │                │  │                 │
-       └───────┬────────┘  └────────────────┘  └────────┬────────┘
-               │                                         │
-               ▼                                         ▼
-       ┌────────────────┐                    ┌────────────────────┐
-       │ PostgreSQL     │                    │ Availability       │
-       │ + pgvector     │                    │ Booking            │
-       └────────────────┘                    │ Cancellation       │
-                                              │ Rescheduling       │
-                                              └────────────────────┘
+              ┌─────────────────────┼─────────────────────┐
+              │                     │                     │
+              ▼                     ▼                     ▼
+     ┌─────────────────┐   ┌─────────────────┐   ┌──────────────────┐
+     │   Dental RAG    │   │ Date Calculator │   │ Google Calendar  │
+     │ Knowledge Base  │   │                 │   │                  │
+     └────────┬────────┘   └─────────────────┘   └─────────┬────────┘
+              │                                            │
+              ▼                                            ▼
+     ┌─────────────────┐                         ┌────────────────────┐
+     │   PostgreSQL    │                         │   Availability     │
+     │    + pgvector   │                         │   Booking          │
+     └─────────────────┘                         │   Cancellation     │
+                                                 │   Rescheduling     │
+                                                 └────────────────────┘
 ```
 
 ---
@@ -327,7 +327,7 @@ dental-ai-receptionist/
 
 ### PostgreSQL / pgvector
 
-![PostgreSQL Schema](database/postgresql-schema.png)
+![PostgreSQL Schema](database/schema.png)
 
 ### RAG Document Sources
 
