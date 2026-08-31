@@ -327,7 +327,7 @@ dental-ai-receptionist/
 
 ### PostgreSQL / pgvector
 
-![PostgreSQL Schema](database/schema.png)
+![PostgreSQL Schema](database/Schema.png)
 
 ### RAG Document Sources
 
