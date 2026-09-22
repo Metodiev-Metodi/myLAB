@@ -2,26 +2,23 @@
 
 ## 👨‍💻 About Me
 
-IT and Data professional with **10+ years of experience in IT Operations** and **1.5+ years of hands-on experience in Data Analytics and BI**.
+IT and Data professional with **10+ years of experience in IT Operations** and hands-on experience in **Data Analytics, BI, automation and AI solutions**.
 
-My recent experience includes working with **SQL, data validation, data analysis, data modeling, Dremio and Power BI**, with a focus on transforming business requirements into reliable analytical datasets and dashboards.
+My work combines **SQL, data validation, data modeling, Power BI, Dremio, n8n, RAG, AI Agents, PostgreSQL/pgvector and web technologies**. I focus on turning business requirements into reliable data products and practical automation.
 
-I have worked closely with business stakeholders to understand requirements, validate data, prepare datasets and deliver meaningful reporting and visualizations.
-
-My previous IT Operations experience provides a strong technical foundation in troubleshooting, systems, access management, security, compliance and stakeholder communication.
+My IT Operations background adds a strong foundation in troubleshooting, systems, access management, security, compliance and stakeholder communication.
 
 ## 🛠️ Core Skills
 
 ### Data & BI
 
 - SQL
-- Data Analysis
-- Data Validation
+- Data Analysis & Data Validation
 - Data Modeling
 - Power BI
 - Dremio
 - ETL / Data Preparation
-- Dashboard Development
+- KPI & Dashboard Development
 
 ### IT & Infrastructure
 
@@ -32,153 +29,93 @@ My previous IT Operations experience provides a strong technical foundation in t
 - Software Deployment
 - Security & Compliance
 
-### Automation
+### Automation & AI
 
 - n8n
 - AI Agents
-- PostgreSQL
-- API Integrations
-- Webhooks
+- RAG
+- Embeddings
+- PostgreSQL / pgvector
+- APIs & Webhooks
+- JavaScript
 
 ---
 
 # Projects
 
-## 1. 🦷 AI-Powered Dental Receptionist -  > 🌐 **Live Website:** [Boyanova Dent](https://boyanovadent.com/)
+## 1. 🦷 AI-Powered Dental Receptionist — [Boyanova Dent](https://boyanovadent.com/)
 
-An AI-powered dental reception assistant built for **Boyanova Dent**, combining **n8n, AI agents, RAG, PostgreSQL/pgvector, embeddings, Google Calendar and a Next.js web application**.
+A production-oriented AI dental reception assistant combining **n8n, AI Agents, two RAG knowledge layers, PostgreSQL/pgvector, Google Calendar and a Next.js web application**.
 
-The project demonstrates how an AI agent can combine structured knowledge, clinic-specific policies and external tools to answer questions and manage real appointment workflows.
+The project demonstrates AI applied to a real business workflow: knowledge retrieval, clinic policies, natural-language conversations and appointment management.
 
-### Key Features
+### Highlights
 
-- Two RAG knowledge layers
-- General dental knowledge retrieval
+- General Dental Knowledge RAG
 - **Dental_services_policy** for clinic-specific services and policies
-- PDF document ingestion and chunking
-- Semantic search using PostgreSQL + pgvector
-- AI Agent orchestration with n8n
-- Google Calendar availability checking
-- Appointment creation, cancellation and rescheduling
-- Natural-language date and time handling
+- PostgreSQL + pgvector semantic search
+- AI Agent orchestration
+- Google Calendar availability and appointment workflows
 - Conversation memory
-- Patient information collection during booking
-- Automated dental news section
 - Next.js / React frontend
-- Cloudflare Tunnel for webhook exposure
-- Vercel deployment
+- Cloudflare Tunnel + Vercel deployment
+- Automated dental news workflow
 
-### RAG Architecture
+👉 [View the full Dental AI Receptionist project](Dental-AI-receptionist/)
 
-```text
-                         User Question
-                              │
-                              ▼
-                          AI Agent
-                         /        \
-                        /          \
-                       ▼            ▼
-           General Dental RAG   Dental_services_policy
-                   │                    │
-                   ▼                    ▼
-            General dental       Clinic-specific
-               knowledge        services & policies
-                       \          /
-                        \        /
-                         ▼      ▼
-                       AI Response
-```
+---
 
-### Appointment Architecture
+## 2. 📊 AI-Powered Sales Analytics Dashboard
 
-```text
-User
-  │
-  ▼
-Next.js Website
-  │
-  ▼
-n8n Webhook
-  │
-  ▼
-AI Agent
-  │
-  ├── General Dental RAG
-  ├── Dental_services_policy
-  ├── Date & Time Calculator
-  ├── Conversation Memory
-  │
-  └── Google Calendar
-          ├── Check Availability
-          ├── Create Event
-          ├── Get Appointments
-          ├── Cancel Appointment
-          └── Reschedule Appointment
-```
+An automated **data-to-dashboard pipeline** combining **Azure SQL, SQL, n8n, AI and Chart.js**.
 
-### Automated Dental News
+The workflow extracts analytical datasets, validates and structures them, uses AI to produce a dashboard specification, and generates an executive HTML dashboard from the supplied data.
 
-A separate n8n workflow collects and processes dental-related news for the website.
+### Pipeline
 
-```text
-News Sources
-     ↓
-n8n Workflow
-     ↓
-Content Extraction
-     ↓
-Dental Topic Filtering
-     ↓
-Article Processing
-     ↓
-Website News Section
-```
-
-### Technologies
-
-**n8n · AI Agent · RAG · PostgreSQL · pgvector · OpenAI Embeddings · JavaScript · Google Calendar · Next.js · React · Vercel · Cloudflare Tunnel**
-
-👉 **[View the full Dental AI Receptionist project](Dental-AI-receptionist/)**
-
-### Demo
-
-[▶️ Watch the Dental AI Receptionist Demo](Dental-AI-receptionist/demo/n8n.mp4)
-
-![Dental AI Receptionist Demo](Dental-AI-receptionist/demo/n8n.gif)
-
-![Dental AI Receptionist](Dental-AI-receptionist/screenshots/Create_event.png)
-
-## 2. AI-Powered Sales Analytics Dashboard
-
-An automated data-to-dashboard pipeline built with **n8n, Azure SQL, SQL, AI and Chart.js**.
-
-The workflow extracts analytical data from Azure SQL, processes and validates the datasets, uses AI to generate a dashboard specification, and generates an executive HTML dashboard.
-
-### Architecture
-
-```text
+~~~
 Azure SQL
     ↓
 SQL Queries
     ↓
-n8n
+n8n Data Processing
     ↓
-Data Processing & Validation
+Validation & Dataset Assembly
     ↓
 AI Dashboard Specification
     ↓
-AI HTML Generation
+AI Dashboard Generation
     ↓
-Chart.js Dashboard
+HTML + CSS + JavaScript + Chart.js
+    ↓
+Executive Dashboard
     ↓
 Webhook
-```
-👉 [View the full AI Sales Dashboard project](AI-sales-dashboard/)
+~~~
 
-![w](AI-sales-dashboard/screenshots/n8n_AI_architecture.png)
+### Analytics
+
+- Revenue
+- Orders
+- Average Order Value
+- Delivered orders
+- Customers
+- Order items
+- Product/category performance
+- Customer geography
+- Revenue trends
+- Data-quality checks
+- Business insights
+
+👉 [View the full AI Sales Analytics Dashboard project](AI-sales-dashboard/)
+
+![AI Sales Dashboard](AI-sales-dashboard/screenshots/n8n_AI_architecture.png)
+
 ![Sales and Orders Executive Dashboard](AI-sales-dashboard/screenshots/Dashboard_Sales.png)
 
-## 3. IT Analytics Dashboard
+---
+
+## 3. 📈 IT Analytics Dashboard
 
 An analytics project focused on IT operational data and business-oriented reporting.
 
@@ -197,12 +134,12 @@ An analytics project focused on IT operational data and business-oriented report
 - KPI analysis
 - Dashboard development
 - Business insights
-  
+
 👉 [View the full IT Support Analytics project](IT-Support-Analytics/)
-### Dashboard Preview
 
-![Overview Dashboard](IT-Support-Analytics//screenshots/Dashboard.png)
+![IT Dashboard](IT-Support-Analytics/screenshots/Dashboard.png)
 
+---
 
 # 🔧 Technology Overview
 
@@ -214,13 +151,13 @@ An analytics project focused on IT operational data and business-oriented report
 | Automation | n8n · Webhooks · APIs |
 | Web | Next.js · React · JavaScript |
 | Cloud & Deployment | Vercel · Cloudflare Tunnel |
-| Productivity | GitHub · Visual Studio Code |
+| Development | GitHub · Visual Studio Code |
 | Integrations | Google Calendar |
 
 # 🎯 Portfolio Focus
 
-These projects demonstrate a progression across **IT Operations → Data Analytics → BI → Automation → AI → RAG → Web Applications**.
+These projects demonstrate a progression across:
 
-The focus is on practical solutions that connect technical infrastructure, data and AI with real business workflows.
+**IT Operations → Data Analytics → BI → Automation → AI → RAG → Web Applications**
 
----
+The focus is on practical solutions that connect **technical infrastructure, data and AI with real business workflows**.
