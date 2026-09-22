@@ -1,4 +1,4 @@
-# IT, Data & AI Portfolio
+# IT-Data & AI Portfolio
 
 ## 👨‍💻 About Me
 
@@ -44,7 +44,7 @@ My previous IT Operations experience provides a strong technical foundation in t
 
 # Projects
 
-## 1. 🦷 AI-Powered Dental Receptionist - 🌐 **Live Website:** [Boyanova Dent](https://boyanovadent.com/)
+## 1. 🦷 AI-Powered Dental Receptionist -  > 🌐 **Live Website:** [Boyanova Dent](https://boyanovadent.com/)
 
 An AI-powered dental reception assistant built for **Boyanova Dent**, combining **n8n, AI agents, RAG, PostgreSQL/pgvector, embeddings, Google Calendar and a Next.js web application**.
 
