@@ -1,10 +1,14 @@
 # 🦷 Dental AI Receptionist
 
+> **Live website:** [🌐 Boyanova Dent](https://boyanova-dent.vercel.app/)
+
 An AI-powered virtual dental receptionist built for **Boyanova Dent**, combining conversational AI, RAG, PostgreSQL/pgvector, n8n workflow automation and Google Calendar.
 
-The project is designed to handle common dental receptionist tasks through a natural-language chat interface — answering general dental questions, checking appointment availability and assisting with appointment management.
+The project includes both the **AI receptionist backend/workflow** and a modern web interface built with **Next.js**, developed in **Visual Studio Code** and deployed with **Vercel**.
 
-> **Project type:** AI Automation / RAG / Conversational AI / Workflow Automation
+It is designed to handle common dental receptionist tasks through a natural-language chat interface — answering general dental questions, checking appointment availability and assisting with appointment management.
+
+> **Project type:** AI Automation / RAG / Conversational AI / Workflow Automation / Full-Stack Web Application
 
 ---
 
@@ -22,13 +26,69 @@ It combines:
 - 🕒 Natural-language date and time handling
 - 💬 Conversation memory
 - 🔄 n8n workflow automation
-- 🌐 Web chat integration
+- 🌐 Next.js web application
+- ☁️ Vercel deployment
+- 📰 Automated dental news aggregation
 
-The assistant is designed to act as a digital first-line receptionist for a dental practice while keeping the knowledge used for dental information answers inside a controlled knowledge base.
+The system is designed as a practical digital receptionist for a dental practice, with the website, AI workflow and automated content pipeline working together.
 
 ---
 
-## 🏗️ Architecture
+## 🌐 Website & Frontend
+
+The public-facing website was built from scratch using **Next.js** and **React**, with the project developed in **Visual Studio Code** and deployed through **Vercel**.
+
+### Website
+
+**[🌐 Visit Boyanova Dent](https://boyanova-dent.vercel.app/)**
+
+The website includes:
+
+- Home page
+- Mission section
+- Dental services
+- Contact information
+- AI chat assistant
+- 📰 **News section**
+- Responsive design for desktop and mobile
+
+The frontend communicates with the n8n AI workflow through a webhook API.
+
+---
+
+## 📰 Automated Dental News Section
+
+The website includes a dedicated **News** section powered by an additional n8n automation workflow.
+
+Instead of manually adding articles, the workflow automatically:
+
+1. Collects news from configured sources.
+2. Processes the retrieved content.
+3. Filters the information for **dental-related topics**.
+4. Extracts and structures the relevant articles.
+5. Publishes the selected dental news to the website.
+
+This creates an automated content pipeline where the website can continuously receive relevant dental news without requiring manual article creation.
+
+~~~text
+News Sources
+     ↓
+n8n Workflow
+     ↓
+Content Extraction
+     ↓
+Dental Topic Filtering
+     ↓
+Article Processing
+     ↓
+Website News Section
+~~~
+
+This is separate from the dental RAG knowledge base: the RAG system is used for the AI receptionist's knowledge retrieval, while the news workflow provides fresh dental-related content for the public website.
+
+---
+
+## 🏗️ AI Receptionist Architecture
 
 ~~~text
                     ┌──────────────────────┐
@@ -38,7 +98,8 @@ The assistant is designed to act as a digital first-line receptionist for a dent
                                │
                                ▼
                     ┌──────────────────────┐
-                    │      Chat Interface  │
+                    │      Next.js Chat    │
+                    │     Web Interface    │
                     └──────────┬───────────┘
                                │
                                ▼
@@ -193,14 +254,7 @@ Friday
 12.09.2026
 ~~~
 
-The calculator produces standardized ISO 8601 timestamps, for example:
-
-~~~text
-2026-09-07T09:00:00+03:00
-2026-09-07T17:00:00+03:00
-~~~
-
-This reduces ambiguity when working with calendar events and natural-language dates.
+The calculator produces standardized ISO 8601 timestamps, reducing ambiguity when working with calendar events and natural-language dates.
 
 ---
 
@@ -224,7 +278,7 @@ User: Запази го.
 AI: Разбира се. Моля, кажете име и телефонен номер.
 ~~~
 
-The assistant can use the previous conversation context to understand phrases such as:
+The assistant can use previous conversation context to understand phrases such as:
 
 - "този час"
 - "запази го"
@@ -234,8 +288,6 @@ The assistant can use the previous conversation context to understand phrases su
 ---
 
 ## 🌐 Website Integration
-
-The AI receptionist can be exposed through a website chat interface.
 
 The web application communicates with the n8n webhook using a simple JSON payload:
 
@@ -260,34 +312,14 @@ This keeps the website frontend relatively independent from the AI workflow.
 
 ---
 
-## 🔐 Security & Privacy
-
-No production credentials, API keys, passwords or private patient information should be stored in this repository.
-
-The repository contains:
-
-- Workflow configuration
-- Database examples / schemas
-- Demonstration assets
-- Screenshots
-- Documentation
-
-Credentials for external services such as:
-
-- LLM providers
-- PostgreSQL
-- Google Calendar
-
-must be configured separately inside the local n8n environment.
-
-> **Important:** Patient information and real appointment data should not be committed to GitHub.
-
----
-
-## 🛠️ Tech Stack
+## 🛠️ Technology Stack
 
 | Technology | Purpose |
 |---|---|
+| **Next.js / React** | Website and chat interface |
+| **Visual Studio Code** | Development environment |
+| **Vercel** | Website deployment |
+| **GitHub** | Source control and project repository |
 | **n8n** | Workflow automation and AI orchestration |
 | **AI Agent** | Conversational decision making |
 | **PostgreSQL** | Database and vector storage |
@@ -296,8 +328,9 @@ must be configured separately inside the local n8n environment.
 | **JavaScript** | Date processing and workflow logic |
 | **Google Calendar** | Appointment management |
 | **RAG** | Knowledge retrieval |
-| **PDF documents** | Knowledge-base sources |
 | **Webhook API** | Website ↔ n8n communication |
+| **Cloudflare Tunnel** | Secure public access to the local n8n environment |
+| **GitHub + Vercel** | Version control and deployment pipeline |
 
 ---
 
@@ -362,6 +395,24 @@ Dental-AI-receptionist/
 
 ---
 
+## 🔐 Security & Privacy
+
+No production credentials, API keys, passwords or private patient information should be stored in this repository.
+
+The repository contains:
+
+- Workflow configuration
+- Database examples / schemas
+- Demonstration assets
+- Screenshots
+- Documentation
+
+Credentials for external services such as LLM providers, PostgreSQL and Google Calendar must be configured separately inside the local n8n environment.
+
+> **Important:** Patient information and real appointment data should not be committed to GitHub.
+
+---
+
 ## ⚙️ Setup
 
 ### 1. Install n8n
@@ -418,7 +469,7 @@ to the n8n webhook.
 ~~~text
 User Message
      ↓
-Website Chat
+Next.js Website
      ↓
 n8n Webhook
      ↓
@@ -455,6 +506,7 @@ Current areas include:
 - RAG retrieval quality
 - Conversation context
 - Website integration
+- Automated dental news collection
 - Production deployment
 - Error handling and validation
 
@@ -476,6 +528,7 @@ Potential next steps include:
 - Production-grade authentication
 - Improved privacy controls
 - Analytics for receptionist interactions
+- More advanced dental-news filtering
 
 ---
 
@@ -485,15 +538,17 @@ The goal of this project is to demonstrate how modern AI components can be combi
 
 Instead of building only a chatbot, the project connects:
 
-**LLM + RAG + Vector Database + Workflow Automation + APIs + Calendar**
+**LLM + RAG + Vector Database + Workflow Automation + APIs + Calendar + Web Application**
 
-into a system capable of handling real-world receptionist workflows.
+into a system capable of handling real-world receptionist workflows and automated dental content publishing.
 
 ---
 
 ## 👨‍💻 About
 
-Built as a practical AI automation project using **n8n, PostgreSQL/pgvector, RAG and conversational AI**.
+Built as a practical AI automation and full-stack web project using:
+
+**Next.js · React · n8n · PostgreSQL · pgvector · RAG · Google Calendar · GitHub · Vercel · Cloudflare Tunnel**
 
 The project is part of a broader portfolio focused on:
 
@@ -503,3 +558,4 @@ The project is part of a broader portfolio focused on:
 - RAG systems
 - Business process automation
 - IT infrastructure
+- Full-stack AI applications
