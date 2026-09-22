@@ -1,4 +1,4 @@
-# IT & Data Analytics Portfolio
+# IT, Data & AI Portfolio
 
 ## 👨‍💻 About Me
 
@@ -44,14 +44,17 @@ My previous IT Operations experience provides a strong technical foundation in t
 
 # Projects
 
-## 1. AI-Powered Dental Receptionist
+## 1. 🦷 AI-Powered Dental Receptionist
 
-An AI-powered dental reception assistant built with n8n, RAG, PostgreSQL/pgvector, embeddings, JavaScript and Google Calendar.
+An AI-powered dental reception assistant built for **Boyanova Dent**, combining **n8n, AI agents, RAG, PostgreSQL/pgvector, embeddings, Google Calendar and a Next.js web application**.
 
-The project demonstrates how an AI agent can combine a document-based knowledge base with external tools to answer dental information questions and manage real-world appointment workflows.
+The project demonstrates how an AI agent can combine structured knowledge, clinic-specific policies and external tools to answer questions and manage real appointment workflows.
 
-Key Features
-- RAG-based dental knowledge retrieval
+### Key Features
+
+- Two RAG knowledge layers
+- General dental knowledge retrieval
+- **Dental_services_policy** for clinic-specific services and policies
 - PDF document ingestion and chunking
 - Semantic search using PostgreSQL + pgvector
 - AI Agent orchestration with n8n
@@ -59,51 +62,93 @@ Key Features
 - Appointment creation, cancellation and rescheduling
 - Natural-language date and time handling
 - Conversation memory
-- Patient name and phone collection during booking
-  
-## Architecture
+- Patient information collection during booking
+- Automated dental news section
+- Next.js / React frontend
+- Cloudflare Tunnel for webhook exposure
+- Vercel deployment
+
+### RAG Architecture
+
+```text
+                         User Question
+                              │
+                              ▼
+                          AI Agent
+                         /        \
+                        /          \
+                       ▼            ▼
+           General Dental RAG   Dental_services_policy
+                   │                    │
+                   ▼                    ▼
+            General dental       Clinic-specific
+               knowledge        services & policies
+                       \          /
+                        \        /
+                         ▼      ▼
+                       AI Response
+```
+
+### Appointment Architecture
 
 ```text
 User
   │
   ▼
-n8n AI Agent
+Next.js Website
   │
-  ├── Dental Knowledge Base
-  │       │
-  │       ▼
-  │    Embeddings
-  │       │
-  │       ▼
-  │    PostgreSQL + pgvector
+  ▼
+n8n Webhook
   │
-  ├── Date Calculator
+  ▼
+AI Agent
   │
+  ├── General Dental RAG
+  ├── Dental_services_policy
+  ├── Date & Time Calculator
   ├── Conversation Memory
   │
   └── Google Calendar
-          │
           ├── Check Availability
           ├── Create Event
           ├── Get Appointments
           ├── Cancel Appointment
           └── Reschedule Appointment
 ```
-Technologies
 
-n8n · AI Agent · RAG · PostgreSQL · pgvector · Embeddings · JavaScript · Google Calendar
+### Automated Dental News
 
-Project Repository
+A separate n8n workflow collects and processes dental-related news for the website.
 
- ## Demo
+```text
+News Sources
+     ↓
+n8n Workflow
+     ↓
+Content Extraction
+     ↓
+Dental Topic Filtering
+     ↓
+Article Processing
+     ↓
+Website News Section
+```
+
+### Technologies
+
+**n8n · AI Agent · RAG · PostgreSQL · pgvector · OpenAI Embeddings · JavaScript · Google Calendar · Next.js · React · Vercel · Cloudflare Tunnel**
+
+🌐 **Live Website:** [Boyanova Dent](https://boyanova-dent.vercel.app/)
+
+👉 **[View the full Dental AI Receptionist project](Dental-AI-receptionist/)**
+
+### Demo
 
 [▶️ Watch the Dental AI Receptionist Demo](Dental-AI-receptionist/demo/n8n.mp4)
+
 ![Dental AI Receptionist Demo](Dental-AI-receptionist/demo/n8n.gif)
 
-👉 [View the full Dental AI Receptionist project](Dental-AI-receptionist/)
 ![Dental AI Receptionist](Dental-AI-receptionist/screenshots/Create_event.png)
-The project repository contains the n8n workflow, database screenshots, RAG retrieval examples and project documentation.
-
 
 ## 2. AI-Powered Sales Analytics Dashboard
 
@@ -159,5 +204,25 @@ An analytics project focused on IT operational data and business-oriented report
 ### Dashboard Preview
 
 ![Overview Dashboard](IT-Support-Analytics//screenshots/Dashboard.png)
+
+
+# 🔧 Technology Overview
+
+| Area | Technologies |
+|---|---|
+| Data & BI | SQL · Power BI · Dremio |
+| Databases | PostgreSQL · pgvector · Azure SQL |
+| AI | AI Agents · RAG · Embeddings |
+| Automation | n8n · Webhooks · APIs |
+| Web | Next.js · React · JavaScript |
+| Cloud & Deployment | Vercel · Cloudflare Tunnel |
+| Productivity | GitHub · Visual Studio Code |
+| Integrations | Google Calendar |
+
+# 🎯 Portfolio Focus
+
+These projects demonstrate a progression across **IT Operations → Data Analytics → BI → Automation → AI → RAG → Web Applications**.
+
+The focus is on practical solutions that connect technical infrastructure, data and AI with real business workflows.
 
 ---
