@@ -135,7 +135,40 @@ This is separate from the dental RAG knowledge base: the RAG system is used for 
 
 The assistant uses **Retrieval-Augmented Generation** instead of relying only on the language model's general knowledge.
 
-The document pipeline is:
+The system uses **two separate knowledge layers**, keeping general dental knowledge separate from clinic-specific services and policies.
+
+### Two-RAG Architecture
+
+~~~text
+                    User Question
+                         │
+                         ▼
+                     AI Agent
+                    /        \\
+                   /          \\
+                  ▼            ▼
+      General Dental RAG   Dental_services_policy
+              │                    │
+              ▼                    ▼
+       General dental       Clinic-specific
+          knowledge        services & policies
+                  \\          /
+                   \\        /
+                    ▼      ▼
+                  AI Response
+~~~
+
+#### 1. General Dental Knowledge RAG
+
+Provides general dental and oral-health knowledge used to answer common patient questions and provide educational information.
+
+#### 2. Dental_services_policy
+
+Contains clinic-specific information for **Boyanova Dent**, including dental services, clinic information, policies, rules and patient-facing instructions. This knowledge layer is intended for information that is specific to the clinic rather than general dental knowledge.
+
+The separation allows the AI Agent to distinguish between **general dental information** and **clinic-specific information and policies**.
+
+The document pipeline for the RAG knowledge bases is:
 
 ~~~text
 Dental Documents
