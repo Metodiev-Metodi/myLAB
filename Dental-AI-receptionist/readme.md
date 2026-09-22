@@ -1,126 +1,187 @@
-#  Dental AI Receptionist 
+# 🦷 Dental AI Receptionist
 
-An AI-powered dental reception assistant built with **n8n**, **RAG**, **PostgreSQL/pgvector**, **LLM tools**, and **Google Calendar**.
+An AI-powered virtual dental receptionist built for **Boyanova Dent**, combining conversational AI, RAG, PostgreSQL/pgvector, n8n workflow automation and Google Calendar.
 
-The assistant can answer dental information questions using a document-based knowledge base, check appointment availability, and manage calendar appointments through a conversational interface.
+The project is designed to handle common dental receptionist tasks through a natural-language chat interface — answering general dental questions, checking appointment availability and assisting with appointment management.
 
----
-##  Project Overview
-
-This project demonstrates how an AI agent can automate common dental receptionist tasks while using a controlled knowledge base for clinic-related information.
-
-The system combines:
-
-* AI Agent orchestration
-* Retrieval-Augmented Generation (RAG)
-* PostgreSQL with pgvector
-* Document ingestion and chunking
-* Embeddings and semantic search
-* Google Calendar integration
-* Conversation memory
-* JavaScript date processing
-* Appointment availability and booking workflows
-
-The project was built as a practical **AI automation / RAG application using n8n**.
-
- ## Demo
-
-[▶️ Watch the Dental AI Receptionist Demo](demo/n8n.mp4)
-
-![Dental AI Receptionist Demo](demo/n8n.gif)
----
-
-##  Features
-
-###  Dental Knowledge Base
-
-The assistant uses a RAG pipeline to retrieve relevant information from dental documents before generating an answer.
-
-The knowledge base contains multiple PDF documents covering topics such as:
-
-* Dental visits
-* Children's dental health
-* Dental treatment
-* Sedation
-* General anaesthetic procedures
-* Patient information and aftercare
-
-Documents are extracted, split into smaller chunks, embedded, and stored in PostgreSQL using pgvector.
+> **Project type:** AI Automation / RAG / Conversational AI / Workflow Automation
 
 ---
 
-###  RAG / Semantic Search
+## 🚀 Project Overview
 
-The RAG pipeline follows this process:
+The Dental AI Receptionist goes beyond a traditional chatbot.
 
-```text
-PDF Documents
-      ↓
-Read Files from Disk
-      ↓
-Extract from File
-      ↓
+It combines:
+
+- 🤖 AI Agent orchestration
+- 📚 Retrieval-Augmented Generation (RAG)
+- 🧠 Semantic search with embeddings
+- 🗄️ PostgreSQL + pgvector
+- 📅 Google Calendar integration
+- 🕒 Natural-language date and time handling
+- 💬 Conversation memory
+- 🔄 n8n workflow automation
+- 🌐 Web chat integration
+
+The assistant is designed to act as a digital first-line receptionist for a dental practice while keeping the knowledge used for dental information answers inside a controlled knowledge base.
+
+---
+
+## 🏗️ Architecture
+
+~~~text
+                    ┌──────────────────────┐
+                    │        Patient       │
+                    │      / Website       │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │      Chat Interface  │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │     n8n Webhook      │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │       AI Agent       │
+                    └──────────┬───────────┘
+                               │
+             ┌─────────────────┼─────────────────┐
+             │                 │                 │
+             ▼                 ▼                 ▼
+      ┌──────────────┐  ┌──────────────┐  ┌────────────────┐
+      │   Dental RAG │  │ Date & Time  │  │ Google Calendar│
+      │  Knowledge   │  │  Calculator  │  │     Tools      │
+      └──────┬───────┘  └──────────────┘  └───────┬────────┘
+             │                                     │
+             ▼                                     ▼
+      ┌──────────────┐                    ┌────────────────┐
+      │ PostgreSQL   │                    │ Availability   │
+      │  + pgvector  │                    │ Booking        │
+      └──────────────┘                    │ Rescheduling   │
+                                          │ Cancellation   │
+                                          └────────────────┘
+~~~
+
+---
+
+## 🧠 RAG Knowledge Base
+
+The assistant uses **Retrieval-Augmented Generation** instead of relying only on the language model's general knowledge.
+
+The document pipeline is:
+
+~~~text
+Dental Documents
+       ↓
+Read / Extract Text
+       ↓
 JavaScript Chunking
-      ↓
+       ↓
 Document Metadata
-      ↓
+       ↓
 Embeddings
-      ↓
+       ↓
 PostgreSQL + pgvector
-      ↓
-Vector Search
-      ↓
+       ↓
+Semantic Search
+       ↓
 AI Agent
-```
+       ↓
+Response
+~~~
 
-Each document is split into overlapping chunks to improve retrieval quality.
+Documents are divided into smaller overlapping chunks and stored together with metadata describing their source.
 
-The chunks contain metadata identifying their original PDF source.
+### Vector database
 
-Example:
+Main table:
 
-```json
-{
-  "source": "Caring_your_child_dental_treatment_general_anaesthetic.pdf"
-}
-```
+~~~text
+public.dental_knowledge
+~~~
 
-This allows retrieved information to be traced back to the source document.
+Typical structure:
 
----
+~~~text
+dental_knowledge
+├── id
+├── content
+├── embedding
+└── metadata
+~~~
 
-##  Appointment Management
+Embeddings are stored as vectors and searched using **pgvector**.
 
-The AI agent is connected to Google Calendar tools for appointment management.
+Current embedding configuration:
 
-The workflow supports:
-
-* Checking appointment availability
-* Checking availability for a specific date
-* Checking a requested time
-* Creating appointments
-* Retrieving existing appointments
-* Cancelling appointments
-* Rescheduling appointments
-
-Before creating an appointment, the assistant collects the required patient information such as:
-
-* Patient name
-* Phone number
-* Requested date
-* Requested time
-
-The patient's name and phone number are used when creating the calendar event.
+~~~text
+text-embedding-3-small
+vector(1536)
+~~~
 
 ---
 
-##  Date & Time Handling
+## 🔎 Semantic Search
 
-Date interpretation is handled through a dedicated JavaScript Date Calculator tool.
+When a user asks a dental-related question:
 
-The system supports natural language date expressions such as:
+1. The question is sent to the AI Agent.
+2. The agent can query the dental knowledge base.
+3. PostgreSQL performs vector similarity search.
+4. Relevant document chunks are returned.
+5. The AI Agent uses the retrieved context to generate the response.
 
-```text
+This provides a controlled knowledge-retrieval layer between the user and the language model.
+
+---
+
+## 📅 Appointment Management
+
+The AI Agent is integrated with **Google Calendar**.
+
+The workflow can work with:
+
+- Appointment availability
+- Date-specific availability
+- Requested time slots
+- Creating appointments
+- Retrieving existing events
+- Cancelling appointments
+- Rescheduling appointments
+
+Before creating an appointment, the assistant is designed to collect the required patient information, including:
+
+- Full name
+- Phone number
+- Reason for the visit
+- Requested date and time
+
+The information can then be used to create a structured calendar event.
+
+---
+
+## 🕒 Date & Time Handling
+
+Date calculations are handled by a dedicated **Date Calculator** rather than asking the language model to manually calculate dates.
+
+The system is configured around:
+
+~~~text
+Timezone: Europe/Sofia
+Working days: Monday – Friday
+Working hours: 09:00 – 17:00
+Slot duration: 30 minutes
+~~~
+
+It supports natural-language expressions such as:
+
+~~~text
 today
 tomorrow
 next Monday
@@ -130,282 +191,315 @@ Friday
 петък
 12 септември
 12.09.2026
-```
+~~~
 
-The date calculator resolves the requested date using the **Europe/Sofia** timezone and returns standardized ISO 8601 timestamps.
+The calculator produces standardized ISO 8601 timestamps, for example:
 
-Example:
-
-```text
+~~~text
 2026-09-07T09:00:00+03:00
 2026-09-07T17:00:00+03:00
-```
+~~~
 
-This prevents the AI agent from manually calculating calendar dates and reduces date-related errors.
-
----
-
-##  Architecture
-
-```text
-                         ┌──────────────────────┐
-                         │        User          │
-                         └──────────┬───────────┘
-                                    │
-                                    ▼
-                         ┌──────────────────────┐
-                         │      AI Agent        │
-                         └──────────┬───────────┘
-                                    │
-              ┌─────────────────────┼─────────────────────┐
-              │                     │                     │
-              ▼                     ▼                     ▼
-     ┌─────────────────┐   ┌─────────────────┐   ┌──────────────────┐
-     │   Dental RAG    │   │ Date Calculator │   │ Google Calendar  │
-     │ Knowledge Base  │   │                 │   │                  │
-     └────────┬────────┘   └─────────────────┘   └─────────┬────────┘
-              │                                            │
-              ▼                                            ▼
-     ┌─────────────────┐                         ┌────────────────────┐
-     │   PostgreSQL    │                         │   Availability     │
-     │    + pgvector   │                         │   Booking          │
-     └─────────────────┘                         │   Cancellation     │
-                                                 │   Rescheduling     │
-                                                 └────────────────────┘
-```
+This reduces ambiguity when working with calendar events and natural-language dates.
 
 ---
 
-##  Vector Database
+## 💬 Conversation Memory
 
-The RAG knowledge base is stored in PostgreSQL.
-
-Main table:
-
-```text
-public.dental_knowledge
-```
-
-The table contains the document chunks, embeddings, and metadata required for semantic retrieval.
-
-Example structure:
-
-```text
-dental_knowledge
-├── id
-├── content
-├── embedding
-└── metadata
-```
-
-The `metadata` field stores information about the original document.
-
----
-
-##  Document Ingestion
-
-The ingestion workflow processes multiple PDF files.
+Conversation memory allows the assistant to maintain context between messages.
 
 Example:
 
-```text
-PDF
- ↓
-Extract text
- ↓
-Split into chunks
- ↓
-Add metadata
- ↓
-Generate embeddings
- ↓
-Store in pgvector
-```
+~~~text
+User: Има ли свободен час утре?
 
-The chunking logic uses:
+AI: Да, има свободни часове.
 
-* Chunk size: 2000 characters
-* Overlap: 200 characters
+User: А в 13:00?
 
-The overlap helps preserve context between neighboring chunks.
+AI: Да, 13:00 е свободен.
 
----
+User: Запази го.
 
-##  Conversation Memory
+AI: Разбира се. Моля, кажете име и телефонен номер.
+~~~
 
-The AI Agent uses conversation memory to maintain context during a conversation.
+The assistant can use the previous conversation context to understand phrases such as:
 
-This allows users to interact naturally across multiple messages instead of providing all information again in every message.
-
-For example:
-
-```text
-User: Do you have an appointment tomorrow?
-
-Agent: Yes, there are available times.
-
-User: At 13:00?
-
-Agent: 13:00 is available.
-
-User: Book it.
-
-Agent: Please provide your name and phone number.
-```
-
-The conversation context allows the agent to understand that "it" refers to the previously discussed appointment.
+- "този час"
+- "запази го"
+- "премести го"
+- "утре"
 
 ---
 
-##  Example RAG Interaction
+## 🌐 Website Integration
 
-**User:**
+The AI receptionist can be exposed through a website chat interface.
 
-> What should I do if my child's mouth starts bleeding after dental treatment?
+The web application communicates with the n8n webhook using a simple JSON payload:
 
-The RAG system retrieves relevant information from the dental knowledge base.
+~~~json
+{
+  "chatInput": "Има ли свободен час утре?",
+  "sessionId": "unique-session-id"
+}
+~~~
 
-Example retrieved source:
+The n8n workflow processes the request and returns the assistant response.
 
-```text
-Caring_your_child_dental_treatment_general_anaesthetic.pdf
-```
+Expected response format:
 
-The AI Agent then generates the response using the retrieved document content.
+~~~json
+{
+  "output": "Да, има свободни часове..."
+}
+~~~
 
----
-
-##  Tech Stack
-
-| Technology      | Purpose                                  |
-| --------------- | ---------------------------------------- |
-| n8n             | Workflow automation and AI orchestration |
-| AI Agent        | Conversational decision making           |
-| PostgreSQL      | Vector database                          |
-| pgvector        | Vector similarity search                 |
-| Embeddings      | Semantic document representation         |
-| JavaScript      | Date processing and document chunking    |
-| Google Calendar | Appointment management                   |
-| RAG             | Knowledge retrieval                      |
-| PDF documents   | Dental knowledge source                  |
+This keeps the website frontend relatively independent from the AI workflow.
 
 ---
 
-##  Repository Structure
+## 🔐 Security & Privacy
 
-```text
-dental-ai-receptionist/
-│
-├── README.md
-│
-├── workflow/
-│   └── dental-ai-receptionist.json
+No production credentials, API keys, passwords or private patient information should be stored in this repository.
+
+The repository contains:
+
+- Workflow configuration
+- Database examples / schemas
+- Demonstration assets
+- Screenshots
+- Documentation
+
+Credentials for external services such as:
+
+- LLM providers
+- PostgreSQL
+- Google Calendar
+
+must be configured separately inside the local n8n environment.
+
+> **Important:** Patient information and real appointment data should not be committed to GitHub.
+
+---
+
+## 🛠️ Tech Stack
+
+| Technology | Purpose |
+|---|---|
+| **n8n** | Workflow automation and AI orchestration |
+| **AI Agent** | Conversational decision making |
+| **PostgreSQL** | Database and vector storage |
+| **pgvector** | Vector similarity search |
+| **OpenAI Embeddings** | Document embeddings |
+| **JavaScript** | Date processing and workflow logic |
+| **Google Calendar** | Appointment management |
+| **RAG** | Knowledge retrieval |
+| **PDF documents** | Knowledge-base sources |
+| **Webhook API** | Website ↔ n8n communication |
+
+---
+
+## 📂 Repository Structure
+
+~~~text
+Dental-AI-receptionist/
 │
 ├── database/
-│   ├── postgresql-schema.png
+│   ├── Schema.png
 │   └── rag-sources.png
 │
-└── screenshots/
-    ├── n8n-workflow.png
-    ├── rag-retrieval.png
-    └── booking.png
-```
+├── demo/
+│   ├── n8n.mp4
+│   └── n8n.gif
+│
+├── screenshots/
+│   ├── Create_event.png
+│   ├── RAG.png
+│   ├── RAG_usage.png
+│   └── RAG_.png
+│
+├── workflow/
+│   └── Dental AI receptionist.json
+│
+└── readme.md
+~~~
 
 ---
 
-##  Screenshots
+## 🎥 Demo
 
-### n8n Workflow & Appointment Booking
+### n8n AI Receptionist
 
-![n8n Workflow](screenshots/Create_event.png)
+[▶️ Watch the Dental AI Receptionist Demo](demo/n8n.mp4)
 
-###  RAG Retrieval
+![Dental AI Receptionist Demo](demo/n8n.gif)
 
-![n8n Workflow1](screenshots/RAG.png)
-![n8n Workflow12](screenshots/RAG_usage.png)
-![n8n Workflow13](screenshots/RAG_.png)
+---
+
+## 📸 Screenshots
+
+### Appointment Workflow
+
+![Appointment Workflow](screenshots/Create_event.png)
+
+### RAG Retrieval
+
+![RAG Retrieval](screenshots/RAG.png)
+
+![RAG Usage](screenshots/RAG_usage.png)
+
+![RAG Workflow](screenshots/RAG_.png)
 
 ### PostgreSQL / pgvector
 
 ![PostgreSQL Schema](database/Schema.png)
 
-### RAG Document Sources
+### RAG Sources
 
 ![RAG Sources](database/rag-sources.png)
 
-
 ---
 
-##  Security
-
-No real credentials, API keys, passwords, or private patient information are included in this repository.
-
-The exported n8n workflow should be configured with the required credentials locally.
-
-The included screenshots and examples use demonstration data only.
-
----
-
-##  Setup
+## ⚙️ Setup
 
 ### 1. Install n8n
 
-Run n8n locally or use an n8n instance.
+Run n8n locally or connect to an existing n8n instance.
 
 ### 2. Configure PostgreSQL
 
-Create a PostgreSQL database with the pgvector extension enabled.
+Create a PostgreSQL database and enable the **pgvector** extension.
 
 ### 3. Import the workflow
 
 Import:
 
-```text
-workflow/dental-ai-receptionist.json
-```
+~~~text
+workflow/Dental AI receptionist.json
+~~~
 
 into n8n.
 
 ### 4. Configure credentials
 
-Connect the required:
+Configure the required credentials for:
 
-* LLM provider
-* PostgreSQL database
-* Google Calendar
-
-credentials.
+- LLM / embeddings
+- PostgreSQL
+- Google Calendar
 
 ### 5. Configure the knowledge base
 
-Add the required dental documents to the document ingestion workflow and run the ingestion process.
+Add the required dental documents to the ingestion workflow and generate the embeddings.
 
-### 6. Start the AI Agent
+### 6. Configure the calendar
 
-The assistant can then be used to answer knowledge-base questions and manage appointments.
+Connect the Google Calendar account used for appointment management.
 
----
+### 7. Connect the website
 
-##  Future Improvements
+Configure the website to send:
 
-Potential improvements include:
+~~~json
+{
+  "chatInput": "user message",
+  "sessionId": "session-id"
+}
+~~~
 
-* More robust appointment validation
-* Improved conflict handling
-* Automatic appointment reminders
-* Patient database integration
-* Better source citation in responses
-* Multi-language support improvements
-* Additional dental knowledge documents
-* More advanced patient identification
-* Production deployment
-* Monitoring and logging
+to the n8n webhook.
 
 ---
 
-##  About the Project
+## 🔄 Example Workflow
 
-This project was created as a practical demonstration of building an **AI-powered automation system using n8n**, combining RAG, vector databases, APIs, workflow automation, and conversational AI.
+~~~text
+User Message
+     ↓
+Website Chat
+     ↓
+n8n Webhook
+     ↓
+AI Agent
+     │
+     ├── Dental RAG
+     │      └── PostgreSQL + pgvector
+     │
+     ├── Date Calculator
+     │
+     ├── Conversation Memory
+     │
+     └── Google Calendar
+             ↓
+        Appointment Tools
+             ↓
+        AI Response
+             ↓
+        Website Chat
+~~~
 
-The goal was to build a system that goes beyond a simple chatbot by allowing the AI agent to interact with external systems and perform real-world tasks.
+---
 
+## 🚧 Current Development Focus
+
+The project is being developed as a practical AI receptionist rather than a static chatbot.
+
+Current areas include:
+
+- Reliable natural-language date handling
+- Appointment availability checks
+- Calendar booking flows
+- Rescheduling and cancellation
+- RAG retrieval quality
+- Conversation context
+- Website integration
+- Production deployment
+- Error handling and validation
+
+---
+
+## 🔮 Future Improvements
+
+Potential next steps include:
+
+- Appointment confirmation messages
+- Automatic reminders
+- Improved conflict handling
+- Better appointment validation
+- Patient database integration
+- Source references in RAG answers
+- Improved multilingual support
+- Voice receptionist integration
+- Monitoring and logging
+- Production-grade authentication
+- Improved privacy controls
+- Analytics for receptionist interactions
+
+---
+
+## 🎯 Project Goal
+
+The goal of this project is to demonstrate how modern AI components can be combined into a practical business automation solution.
+
+Instead of building only a chatbot, the project connects:
+
+**LLM + RAG + Vector Database + Workflow Automation + APIs + Calendar**
+
+into a system capable of handling real-world receptionist workflows.
+
+---
+
+## 👨‍💻 About
+
+Built as a practical AI automation project using **n8n, PostgreSQL/pgvector, RAG and conversational AI**.
+
+The project is part of a broader portfolio focused on:
+
+- AI automation
+- Data & analytics
+- Workflow automation
+- RAG systems
+- Business process automation
+- IT infrastructure
