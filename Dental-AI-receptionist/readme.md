@@ -1,6 +1,6 @@
 # 🦷 Dental AI Receptionist
 
-> **Live website:** [🌐 Boyanova Dent](https://boyanova-dent.vercel.app/)
+> **Live website:** [🌐 Boyanova Dent](https://boyanovadent.com/)
 
 An AI-powered virtual dental receptionist built for **Boyanova Dent**, combining conversational AI, RAG, PostgreSQL/pgvector, n8n workflow automation and Google Calendar.
 
