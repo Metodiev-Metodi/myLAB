@@ -44,7 +44,7 @@ My previous IT Operations experience provides a strong technical foundation in t
 
 # Projects
 
-## 1. 🦷 AI-Powered Dental Receptionist
+## 1. 🦷 AI-Powered Dental Receptionist - 🌐 **Live Website:** [Boyanova Dent](https://boyanovadent.com/)
 
 An AI-powered dental reception assistant built for **Boyanova Dent**, combining **n8n, AI agents, RAG, PostgreSQL/pgvector, embeddings, Google Calendar and a Next.js web application**.
 
@@ -137,8 +137,6 @@ Website News Section
 ### Technologies
 
 **n8n · AI Agent · RAG · PostgreSQL · pgvector · OpenAI Embeddings · JavaScript · Google Calendar · Next.js · React · Vercel · Cloudflare Tunnel**
-
-🌐 **Live Website:** [Boyanova Dent](https://boyanova-dent.vercel.app/)
 
 👉 **[View the full Dental AI Receptionist project](Dental-AI-receptionist/)**
 
